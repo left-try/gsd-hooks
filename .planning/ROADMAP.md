@@ -27,7 +27,12 @@
   3. A `gsd-plan-execute-all` chain running in normal mode waits at least 15 seconds between phase triggers, and that gap is skippable via environment variable override
   4. Economy state is always readable by hooks without parsing config (lock file present/absent is sufficient signal)
   5. Every 429 event is logged with a timestamp so the user can review frequency after a session
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Package scaffold, economy preset, and config patch/restore CLI (gsd-economy.js)
+- [ ] 01-02-PLAN.md — 429 guard hook: transcript scan, economy activation, 60s cooldown, rate-limit logging
+- [ ] 01-03-PLAN.md — Phase pacer hook: configurable inter-phase delay with economy-mode bypass
 
 ### Phase 2: Feature Workflow Skill
 **Goal**: Users can develop and ship isolated features without needing a milestone or ROADMAP.md
@@ -60,11 +65,11 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Economy & Rate-Limit Layer | 0/? | Not started | - |
+| 1. Economy & Rate-Limit Layer | 0/3 | Not started | - |
 | 2. Feature Workflow Skill | 0/? | Not started | - |
 | 3. NPX Installer & Package Wiring | 0/? | Not started | - |
 
 ---
 
 *Roadmap created: 2026-06-08*
-*Last updated: 2026-06-08 after initialization*
+*Last updated: 2026-06-09 after Phase 1 planning*
