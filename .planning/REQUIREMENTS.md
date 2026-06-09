@@ -26,12 +26,12 @@
 
 ### Lightweight Feature Workflow
 
-- [ ] **FEAT-01**: `/gsd-feature "<description>"` starts a feature workflow without requiring a ROADMAP.md or milestone setup
-- [ ] **FEAT-02**: Discuss step asks 2-3 targeted questions and writes CONTEXT.md to `.planning/features/<feature-slug>/`
-- [ ] **FEAT-03**: Plan step spawns a planner agent from CONTEXT.md directly (no researcher, no plan-checker)
-- [ ] **FEAT-04**: Execute+verify step runs tasks and performs an inline verify pass within the same agent (no separate verifier spawn)
-- [ ] **FEAT-05**: Feature workflow applies budget model, 2 concurrent agents, no research/code-review/nyquist per-invocation without permanently modifying `.planning/config.json`
-- [ ] **FEAT-06**: Completed feature artifacts are isolated in `.planning/features/<slug>/` and do not interfere with active milestone phases
+- [x] **FEAT-01**: `/gsd-feature "<description>"` starts a feature workflow without requiring a ROADMAP.md or milestone setup
+- [x] **FEAT-02**: Discuss step asks 2-3 targeted questions and writes CONTEXT.md to `.planning/features/<feature-slug>/`
+- [x] **FEAT-03**: Plan step spawns a planner agent from CONTEXT.md directly (no researcher, no plan-checker)
+- [x] **FEAT-04**: Execute+verify step runs tasks and performs an inline verify pass within the same agent (no separate verifier spawn)
+- [x] **FEAT-05**: Feature workflow applies budget model, 2 concurrent agents, no research/code-review/nyquist per-invocation without permanently modifying `.planning/config.json`
+- [x] **FEAT-06**: Completed feature artifacts are isolated in `.planning/features/<slug>/` and do not interfere with active milestone phases
 
 ### NPX Installer
 
@@ -82,12 +82,12 @@
 | RATE-04 | Phase 1 | Complete (01-02) |
 | PACE-01 | Phase 1 | Complete (01-03) |
 | PACE-02 | Phase 1 | Complete (01-03) |
-| FEAT-01 | Phase 2 | Pending |
-| FEAT-02 | Phase 2 | Pending |
-| FEAT-03 | Phase 2 | Pending |
-| FEAT-04 | Phase 2 | Pending |
-| FEAT-05 | Phase 2 | Pending |
-| FEAT-06 | Phase 2 | Pending |
+| FEAT-01 | Phase 2 | Complete |
+| FEAT-02 | Phase 2 | Complete |
+| FEAT-03 | Phase 2 | Complete |
+| FEAT-04 | Phase 2 | Complete |
+| FEAT-05 | Phase 2 | Complete |
+| FEAT-06 | Phase 2 | Complete |
 | INST-01 | Phase 3 | Pending |
 | INST-02 | Phase 3 | Pending |
 | INST-03 | Phase 3 | Pending |
@@ -95,6 +95,7 @@
 | INST-05 | Phase 3 | Pending |
 
 **Coverage:**
+
 - v1 requirements: 21 total
 - Mapped to phases: 21
 - Unmapped: 0 ✓
