@@ -73,7 +73,15 @@ Plans:
   4. Re-running the installer on an already-configured machine does not add duplicate hook entries or overwrite the existing skill
   5. The installer prints a human-readable summary listing each action taken (what was wired, what was already present, where files were copied)
 
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — bin/install.js installer: hook wiring, skill copy, idempotency, summary output
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 03-02-PLAN.md — test/install.test.js: automated test suite covering INST-01 through INST-05
 
 ---
 
