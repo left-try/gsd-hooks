@@ -18,7 +18,7 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 
 ### Active
 
-- [ ] `/gsd-feature` skill — lightweight feature workflow: discuss + plan as separate steps, execute+verify collapsed into one pass, no research/code-review/nyquist, no roadmap setup required
+- [x] `/gsd-feature` skill — lightweight feature workflow: discuss + plan as separate steps, execute+verify collapsed into one pass, no research/code-review/nyquist, no roadmap setup required (Phase 2 — FEAT-01..06)
 - [ ] NPX installer that detects gsd-core install, wires hooks into `~/.claude/settings.json`, and copies skills into `~/.claude/plugins/`
 
 ### Out of Scope
@@ -49,7 +49,7 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 |----------|-----------|---------|
 | Option B (economy mode + 429 detect) over Option A (pacing-only) or Option C (token tracker) | Self-healing at full quality normally; economy only when rate-limited. Option C requires token estimation without API access. | ✅ Implemented — Phase 1 |
 | Node.js for all hooks (not shell scripts) | Cross-platform compatibility; gsd-core already uses Node hooks | ✅ Confirmed — all hooks are `.js`, no shell scripts |
-| Economy settings injected per-invocation in `/gsd-feature` (not written to config) | Avoids permanently altering project config for a feature run | — Pending (Phase 2) |
+| Economy settings injected per-invocation in `/gsd-feature` (not written to config) | Avoids permanently altering project config for a feature run | ✅ Implemented — Phase 2 |
 | Phase pacing as base delay inside economy system, not separate | Fewer moving parts; one hook handles both concerns | ✅ Confirmed — gsd-phase-pacer defers to economy.lock |
 | `require.main === module` guard in gsd-economy.js | Allows gsd-429-guard to require() and call activate() without killing its own process | ✅ Added during Phase 1 execution |
 
@@ -71,4 +71,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-09 after Phase 1 complete*
+*Last updated: 2026-06-09 after Phase 2 complete*

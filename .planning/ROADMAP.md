@@ -82,7 +82,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Economy & Rate-Limit Layer | 3/3 | Complete    | 2026-06-09 |
-| 2. Feature Workflow Skill | 1/1 | Complete   | 2026-06-09 |
+| 2. Feature Workflow Skill | 1/1 | Complete    | 2026-06-09 |
 | 3. NPX Installer & Package Wiring | 0/? | Not started | - |
 
 ---
