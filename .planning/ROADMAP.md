@@ -11,7 +11,7 @@
 
 - [x] **Phase 1: Economy & Rate-Limit Layer** - Economy toggle, 429 recovery hook, and phase pacing — the self-healing core (completed 2026-06-09)
 - [x] **Phase 2: Feature Workflow Skill** - /gsd-feature lightweight workflow running without a milestone setup (completed 2026-06-09)
-- [ ] **Phase 3: NPX Installer & Package Wiring** - npx entry point that detects gsd-core and wires everything into place
+- [x] **Phase 3: NPX Installer & Package Wiring** - npx entry point that detects gsd-core and wires everything into place (completed 2026-06-09)
 
 ---
 
@@ -81,7 +81,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 03-02-PLAN.md — test/install.test.js: automated test suite covering INST-01 through INST-05
+- [x] 03-02-PLAN.md — test/install.test.js: automated test suite covering INST-01 through INST-05
 
 ---
 
@@ -91,9 +91,9 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Economy & Rate-Limit Layer | 3/3 | Complete    | 2026-06-09 |
 | 2. Feature Workflow Skill | 1/1 | Complete    | 2026-06-09 |
-| 3. NPX Installer & Package Wiring | 1/2 | In progress | - |
+| 3. NPX Installer & Package Wiring | 2/2 | Complete    | 2026-06-09 |
 
 ---
 
 *Roadmap created: 2026-06-08*
-*Last updated: 2026-06-09 after Phase 3 Plan 01 execution*
+*Last updated: 2026-06-09 after Phase 3 Plan 02 execution — all plans complete*
