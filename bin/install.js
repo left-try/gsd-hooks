@@ -14,18 +14,23 @@ const skillDest    = path.join(pluginsDir, 'gsd-feature', 'SKILL.md');
 const restorePath  = path.join(os.homedir(), '.claude', 'settings-hooks-restore.json');
 
 /**
- * Returns parsed JSON from filePath if it exists, otherwise returns {}.
- * Copied from hooks/gsd-economy.js.
+ * Returns parsed JSON from filePath if it does not exist, returns {}.
+ * If the file EXISTS but cannot be parsed, throws a descriptive error to
+ * prevent silent overwrite of a corrupted settings.json (CR-02).
  */
 function readJsonOrEmpty(filePath) {
-  try {
-    if (fs.existsSync(filePath)) {
-      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    }
-  } catch (_err) {
-    // malformed or unreadable — return empty object
+  if (!fs.existsSync(filePath)) {
+    return {};
   }
-  return {};
+  const raw = fs.readFileSync(filePath, 'utf8');
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    throw new Error(
+      `${filePath} exists but is not valid JSON — aborting to avoid data loss. ` +
+      `Fix the file manually first. Parse error: ${err.message}`
+    );
+  }
 }
 
 /**
@@ -48,8 +53,10 @@ function saveHooksSnapshot(originalHooksBlock) {
  * @returns {{ settings: object, changed: boolean }}
  */
 function installHooks(settings, actions) {
-  // Ensure hooks object exists
-  if (!settings.hooks || typeof settings.hooks !== 'object') {
+  // Ensure hooks object exists — explicit Array.isArray guard required because
+  // typeof [] === 'object', so the simple typeof check would keep a [] value
+  // and silently discard all hook entries written to named array properties (CR-01).
+  if (!settings.hooks || typeof settings.hooks !== 'object' || Array.isArray(settings.hooks)) {
     settings.hooks = {};
   }
 
@@ -68,7 +75,7 @@ function installHooks(settings, actions) {
   if (!pacerRegistered) {
     settings.hooks['Stop'].push({
       matcher: '',
-      hooks: [{ type: 'command', command: 'node ' + pacerPath }],
+      hooks: [{ type: 'command', command: 'node ' + JSON.stringify(pacerPath) }],
     });
     changed = true;
     actions.push({ label: 'Stop hook → gsd-phase-pacer.js', status: 'WIRED' });
@@ -89,7 +96,7 @@ function installHooks(settings, actions) {
   if (!guardRegistered) {
     settings.hooks['SubagentStop'].push({
       matcher: '',
-      hooks: [{ type: 'command', command: 'node ' + guardPath }],
+      hooks: [{ type: 'command', command: 'node ' + JSON.stringify(guardPath) }],
     });
     changed = true;
     actions.push({ label: 'SubagentStop hook → gsd-429-guard.js', status: 'WIRED' });
