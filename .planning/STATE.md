@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Not started
-last_updated: "2026-06-08T21:07:03.773Z"
+status: executing
+last_updated: "2026-06-09T04:15:09Z"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 3
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 33
 ---
 
 # State: gsd-hooks
@@ -23,13 +23,15 @@ progress:
 
 ## Current Position
 
+Phase: 1 (Economy & Rate-Limit Layer) — EXECUTING
+Plan: 2 of 3
 **Phase:** 1 — Economy & Rate-Limit Layer
-**Plan:** None yet (planning not started)
-**Status:** Not started
+**Plan:** 01-01 complete; advancing to 01-02
+**Status:** Executing Phase 1
 **Progress:** [ ] Phase 1  [ ] Phase 2  [ ] Phase 3
 
 ```
-Overall: 0 / 3 phases complete
+Overall: 0 / 3 phases complete (1 plan complete)
 ```
 
 ---
@@ -39,9 +41,15 @@ Overall: 0 / 3 phases complete
 | Metric | Value |
 |--------|-------|
 | Phases complete | 0 / 3 |
-| Plans complete | 0 / ? |
-| Requirements shipped | 0 / 21 |
+| Plans complete | 1 / 3 |
+| Requirements shipped | 4 / 21 |
 | Node repairs used | 0 |
+
+### Execution History
+
+| Phase | Plan | Duration | Tasks | Files |
+|-------|------|----------|-------|-------|
+| 01-economy-rate-limit-layer | 01 | 2min | 2 | 3 |
 
 ---
 
@@ -55,6 +63,10 @@ Overall: 0 / 3 phases complete
 | Economy settings injected per-invocation in /gsd-feature | Avoids permanently altering project config for a feature run |
 | Phase pacing as part of economy system, not a standalone hook | Fewer moving parts; one hook handles both concerns |
 | Lock file for economy state detection | Readable by hooks without config parsing |
+| Restore snapshot written before config patch | Prevents config corruption if process dies mid-patch (T-01-01 mitigaton) |
+| extractSnapshot saves only diff keys, not full config | Avoids clobbering unrelated config changes made between --on and --off |
+| Lock file written last on activate | No stale lock if config write succeeds but lock write fails |
+| Missing restore snapshot on --off exits 1 with recovery instruction | Silent skip would corrupt config; user instructed to delete economy.lock manually |
 
 ### Important Constraints
 
@@ -65,7 +77,9 @@ Overall: 0 / 3 phases complete
 
 ### Todos
 
-- [ ] Start Phase 1 planning (`/gsd-plan-phase 1`)
+- [x] Complete Phase 1 Plan 01 — package scaffold and economy toggle CLI
+- [ ] Execute Phase 1 Plan 02 — 429 guard hook
+- [ ] Execute Phase 1 Plan 03 — phase pacer hook
 
 ### Blockers
 
@@ -75,10 +89,11 @@ None
 
 ## Session Continuity
 
-**Last session:** 2026-06-08 — Project initialized, roadmap created
-**Next action:** `/gsd-plan-phase 1` to plan Economy & Rate-Limit Layer
+**Last session:** 2026-06-09 — Executed plan 01-01: package scaffold and economy toggle CLI
+**Stopped at:** 01-01-PLAN.md complete
+**Next action:** Execute 01-02-PLAN.md (429 guard hook)
 
 ---
 
 *State initialized: 2026-06-08*
-*Last updated: 2026-06-08 after roadmap creation*
+*Last updated: 2026-06-09 after plan 01-01 execution*

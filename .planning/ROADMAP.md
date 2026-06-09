@@ -34,7 +34,7 @@
 Plans:
 **Wave 1**
 
-- [ ] 01-01-PLAN.md — Package scaffold, economy preset, and config patch/restore CLI (gsd-economy.js)
+- [x] 01-01-PLAN.md — Package scaffold, economy preset, and config patch/restore CLI (gsd-economy.js)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -78,7 +78,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Economy & Rate-Limit Layer | 0/3 | Not started | - |
+| 1. Economy & Rate-Limit Layer | 1/3 | In progress | - |
 | 2. Feature Workflow Skill | 0/? | Not started | - |
 | 3. NPX Installer & Package Wiring | 0/? | Not started | - |
 

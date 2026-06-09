@@ -7,10 +7,10 @@
 
 ### Economy Mode
 
-- [ ] **ECON-01**: Running `gsd-economy --on` patches `.planning/config.json` to budget model, 1 concurrent agent, and disabled optional steps (code_review, nyquist_validation, plan_check, verifier), saving original values to `.planning/economy-restore.json`
-- [ ] **ECON-02**: Running `gsd-economy --off` restores original config values from `.planning/economy-restore.json`
-- [ ] **ECON-03**: Economy mode patch triggers gsd-core's FileChanged hot-reload (no session restart needed)
-- [ ] **ECON-04**: Economy state is readable from a lock file so hooks can detect active economy mode
+- [x] **ECON-01**: Running `gsd-economy --on` patches `.planning/config.json` to budget model, 1 concurrent agent, and disabled optional steps (code_review, nyquist_validation, plan_check, verifier), saving original values to `.planning/economy-restore.json`
+- [x] **ECON-02**: Running `gsd-economy --off` restores original config values from `.planning/economy-restore.json`
+- [x] **ECON-03**: Economy mode patch triggers gsd-core's FileChanged hot-reload (no session restart needed)
+- [x] **ECON-04**: Economy state is readable from a lock file so hooks can detect active economy mode
 
 ### Rate Limit Recovery
 
@@ -72,10 +72,10 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ECON-01 | Phase 1 | Pending |
-| ECON-02 | Phase 1 | Pending |
-| ECON-03 | Phase 1 | Pending |
-| ECON-04 | Phase 1 | Pending |
+| ECON-01 | Phase 1 | Complete (01-01) |
+| ECON-02 | Phase 1 | Complete (01-01) |
+| ECON-03 | Phase 1 | Complete (01-01) |
+| ECON-04 | Phase 1 | Complete (01-01) |
 | RATE-01 | Phase 1 | Pending |
 | RATE-02 | Phase 1 | Pending |
 | RATE-03 | Phase 1 | Pending |
