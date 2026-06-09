@@ -82,7 +82,7 @@ function extractSnapshot(original, diff) {
 function activate() {
   if (fs.existsSync(lockPath)) {
     console.log('Economy mode already active');
-    process.exit(0);
+    return;
   }
 
   const original = readJsonOrEmpty(configPath);
@@ -141,14 +141,19 @@ function deactivate() {
   console.log('Economy mode deactivated — config restored');
 }
 
-// CLI entry point
-const flag = process.argv[2];
+// Module exports — allows require('./gsd-economy') from other hooks (e.g. gsd-429-guard)
+module.exports = { activate, deactivate };
 
-if (flag === '--on') {
-  activate();
-} else if (flag === '--off') {
-  deactivate();
-} else {
-  console.error('Usage: gsd-economy --on | --off');
-  process.exit(1);
+// CLI entry point — only runs when invoked directly (not when require()'d)
+if (require.main === module) {
+  const flag = process.argv[2];
+
+  if (flag === '--on') {
+    activate();
+  } else if (flag === '--off') {
+    deactivate();
+  } else {
+    console.error('Usage: gsd-economy --on | --off');
+    process.exit(1);
+  }
 }
