@@ -14,10 +14,10 @@
 
 ### Rate Limit Recovery
 
-- [ ] **RATE-01**: Stop/SubagentStop hook detects 429 rate-limit signals in session transcript or output
-- [ ] **RATE-02**: On 429 detection, hook automatically activates economy mode (ECON-01)
-- [ ] **RATE-03**: On 429 detection, hook inserts a 60-second cooldown before allowing next phase to trigger
-- [ ] **RATE-04**: Hook logs each 429 event with timestamp to `.planning/rate-limit-log.json`
+- [x] **RATE-01**: Stop/SubagentStop hook detects 429 rate-limit signals in session transcript or output
+- [x] **RATE-02**: On 429 detection, hook automatically activates economy mode (ECON-01)
+- [x] **RATE-03**: On 429 detection, hook inserts a 60-second cooldown before allowing next phase to trigger
+- [x] **RATE-04**: Hook logs each 429 event with timestamp to `.planning/rate-limit-log.json`
 
 ### Phase Pacing
 
@@ -76,10 +76,10 @@
 | ECON-02 | Phase 1 | Complete (01-01) |
 | ECON-03 | Phase 1 | Complete (01-01) |
 | ECON-04 | Phase 1 | Complete (01-01) |
-| RATE-01 | Phase 1 | Pending |
-| RATE-02 | Phase 1 | Pending |
-| RATE-03 | Phase 1 | Pending |
-| RATE-04 | Phase 1 | Pending |
+| RATE-01 | Phase 1 | Complete (01-02) |
+| RATE-02 | Phase 1 | Complete (01-02) |
+| RATE-03 | Phase 1 | Complete (01-02) |
+| RATE-04 | Phase 1 | Complete (01-02) |
 | PACE-01 | Phase 1 | Complete (01-03) |
 | PACE-02 | Phase 1 | Complete (01-03) |
 | FEAT-01 | Phase 2 | Pending |
