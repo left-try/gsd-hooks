@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-09T04:15:09Z"
+last_updated: "2026-06-09T05:00:00Z"
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 33
+  completed_plans: 2
+  percent: 67
 ---
 
 # State: gsd-hooks
@@ -24,14 +24,14 @@ progress:
 ## Current Position
 
 Phase: 1 (Economy & Rate-Limit Layer) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 **Phase:** 1 — Economy & Rate-Limit Layer
-**Plan:** 01-01 complete; advancing to 01-02
-**Status:** Executing Phase 1
+**Plan:** 01-03 complete; all Wave 2 plans done
+**Status:** Executing Phase 1 (pending 01-02 completion)
 **Progress:** [ ] Phase 1  [ ] Phase 2  [ ] Phase 3
 
 ```
-Overall: 0 / 3 phases complete (1 plan complete)
+Overall: 0 / 3 phases complete (2 plans complete)
 ```
 
 ---
@@ -41,8 +41,8 @@ Overall: 0 / 3 phases complete (1 plan complete)
 | Metric | Value |
 |--------|-------|
 | Phases complete | 0 / 3 |
-| Plans complete | 1 / 3 |
-| Requirements shipped | 4 / 21 |
+| Plans complete | 2 / 3 |
+| Requirements shipped | 6 / 21 |
 | Node repairs used | 0 |
 
 ### Execution History
@@ -50,6 +50,8 @@ Overall: 0 / 3 phases complete (1 plan complete)
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 01-economy-rate-limit-layer | 01 | 2min | 2 | 3 |
+| 01-economy-rate-limit-layer | 02 | 8min | 1 | 2 |
+| 01-economy-rate-limit-layer | 03 | 5min | 1 | 2 |
 
 ---
 
@@ -67,6 +69,11 @@ Overall: 0 / 3 phases complete (1 plan complete)
 | extractSnapshot saves only diff keys, not full config | Avoids clobbering unrelated config changes made between --on and --off |
 | Lock file written last on activate | No stale lock if config write succeeds but lock write fails |
 | Missing restore snapshot on --off exits 1 with recovery instruction | Silent skip would corrupt config; user instructed to delete economy.lock manually |
+| setTimeout at top level for phase pacing delay | No async/await needed; process stays alive for delay duration without promise chain overhead |
+| Zero-delay exits silently (no output) | Avoids polluting CLI chain output when pacing is disabled |
+| activate() returns (not process.exit) when already active | Required for safe require()-based invocation from 429 guard; guard must continue to log and sleep even if economy already on |
+| module.exports added to gsd-economy.js with require.main guard | Enables require('./gsd-economy') from hooks while preserving CLI behaviour |
+| Raw string scan for 429 detection | Transcript may be partially flushed at hook fire; raw includes() scan is safe and reliable vs JSON.parse |
 
 ### Important Constraints
 
@@ -78,8 +85,8 @@ Overall: 0 / 3 phases complete (1 plan complete)
 ### Todos
 
 - [x] Complete Phase 1 Plan 01 — package scaffold and economy toggle CLI
-- [ ] Execute Phase 1 Plan 02 — 429 guard hook
-- [ ] Execute Phase 1 Plan 03 — phase pacer hook
+- [x] Execute Phase 1 Plan 02 — 429 guard hook
+- [x] Execute Phase 1 Plan 03 — phase pacer hook
 
 ### Blockers
 
@@ -89,11 +96,11 @@ None
 
 ## Session Continuity
 
-**Last session:** 2026-06-09 — Executed plan 01-01: package scaffold and economy toggle CLI
-**Stopped at:** 01-01-PLAN.md complete
-**Next action:** Execute 01-02-PLAN.md (429 guard hook)
+**Last session:** 2026-06-09 — Executed plan 01-03: phase pacer hook (TDD)
+**Stopped at:** 01-03-PLAN.md complete
+**Next action:** Phase 1 complete once 01-02 finishes
 
 ---
 
 *State initialized: 2026-06-08*
-*Last updated: 2026-06-09 after plan 01-01 execution*
+*Last updated: 2026-06-09 after plan 01-03 execution*

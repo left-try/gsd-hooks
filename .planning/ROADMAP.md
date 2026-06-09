@@ -38,8 +38,8 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-PLAN.md — 429 guard hook: transcript scan, economy activation, 60s cooldown, rate-limit logging
-- [ ] 01-03-PLAN.md — Phase pacer hook: configurable inter-phase delay with economy-mode bypass
+- [x] 01-02-PLAN.md — 429 guard hook: transcript scan, economy activation, 60s cooldown, rate-limit logging
+- [x] 01-03-PLAN.md — Phase pacer hook: configurable inter-phase delay with economy-mode bypass
 
 ### Phase 2: Feature Workflow Skill
 
@@ -78,7 +78,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Economy & Rate-Limit Layer | 1/3 | In progress | - |
+| 1. Economy & Rate-Limit Layer | 3/3 | Complete | 2026-06-09 |
 | 2. Feature Workflow Skill | 0/? | Not started | - |
 | 3. NPX Installer & Package Wiring | 0/? | Not started | - |
 

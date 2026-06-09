@@ -21,8 +21,8 @@
 
 ### Phase Pacing
 
-- [ ] **PACE-01**: Stop hook adds a configurable base delay (default 15s, configurable via `GSD_PHASE_DELAY_SECS` env var) between phases in `gsd-plan-execute-all` chains
-- [ ] **PACE-02**: Pacing delay is skipped when economy mode is already active (the 60s cooldown supersedes it)
+- [x] **PACE-01**: Stop hook adds a configurable base delay (default 15s, configurable via `GSD_PHASE_DELAY_SECS` env var) between phases in `gsd-plan-execute-all` chains
+- [x] **PACE-02**: Pacing delay is skipped when economy mode is already active (the 60s cooldown supersedes it)
 
 ### Lightweight Feature Workflow
 
@@ -80,8 +80,8 @@
 | RATE-02 | Phase 1 | Pending |
 | RATE-03 | Phase 1 | Pending |
 | RATE-04 | Phase 1 | Pending |
-| PACE-01 | Phase 1 | Pending |
-| PACE-02 | Phase 1 | Pending |
+| PACE-01 | Phase 1 | Complete (01-03) |
+| PACE-02 | Phase 1 | Complete (01-03) |
 | FEAT-01 | Phase 2 | Pending |
 | FEAT-02 | Phase 2 | Pending |
 | FEAT-03 | Phase 2 | Pending |
