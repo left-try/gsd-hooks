@@ -54,8 +54,11 @@ Plans:
   4. The execute+verify step completes inline in one agent pass; no separate verifier subagent is spawned
   5. Feature artifacts live entirely under `.planning/features/<slug>/` and the active milestone's ROADMAP.md and phase state files are unchanged
 
-**Plans**: TBD
-**UI hint**: no
+**Plans**: 1 plan
+Plans:
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Create .claude/skills/gsd-feature/SKILL.md with full 3-step feature workflow (FEAT-01 through FEAT-06)
 
 ### Phase 3: NPX Installer & Package Wiring
 
@@ -79,10 +82,10 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Economy & Rate-Limit Layer | 3/3 | Complete    | 2026-06-09 |
-| 2. Feature Workflow Skill | 0/? | Not started | - |
+| 2. Feature Workflow Skill | 0/1 | Planning    | - |
 | 3. NPX Installer & Package Wiring | 0/? | Not started | - |
 
 ---
 
 *Roadmap created: 2026-06-08*
-*Last updated: 2026-06-09 after Phase 1 planning*
+*Last updated: 2026-06-09 after Phase 2 planning*
