@@ -15,11 +15,12 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 - [x] Economy mode hook that patches `.planning/config.json` to budget model + 1 concurrent agent + disabled optional steps, with restore-on-toggle (Phase 1 — ECON-01, ECON-02, ECON-03, ECON-04)
 - [x] 429 detection hook (Stop/SubagentStop) that scans transcript for rate-limit signals, activates economy mode, and inserts cooldown before retrying (Phase 1 — RATE-01, RATE-02, RATE-03, RATE-04)
 - [x] Phase pacing hook (Stop) that adds a configurable base delay between phases to reduce burst pressure (Phase 1 — PACE-01, PACE-02)
+- [x] `/gsd-feature` skill — lightweight feature workflow: discuss + plan as separate steps, execute+verify collapsed into one pass, no research/code-review/nyquist, no roadmap setup required (Phase 2 — FEAT-01..06)
+- [x] NPX installer that detects gsd-core install, wires hooks into `~/.claude/settings.json`, and copies skills into `~/.claude/plugins/`, with idempotency and restore snapshot (Phase 3 — INST-01..05)
 
 ### Active
 
-- [x] `/gsd-feature` skill — lightweight feature workflow: discuss + plan as separate steps, execute+verify collapsed into one pass, no research/code-review/nyquist, no roadmap setup required (Phase 2 — FEAT-01..06)
-- [ ] NPX installer that detects gsd-core install, wires hooks into `~/.claude/settings.json`, and copies skills into `~/.claude/plugins/`
+None — all v1 requirements complete.
 
 ### Out of Scope
 
@@ -71,4 +72,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-09 after Phase 2 complete*
+*Last updated: 2026-06-09 after Phase 3 complete — all v1 requirements validated*
