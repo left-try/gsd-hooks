@@ -37,6 +37,14 @@ None — all v1 requirements complete.
 - **Hook system:** Claude Code fires `Stop` at session turn end and `SubagentStop` when a spawned subagent completes — these are the right events to intercept for pacing and recovery.
 - **Existing skills install path:** `~/.claude/plugins/` — the same path gsd-core uses for Claude Code skill installation.
 
+### Current State (v1.0)
+
+- **Shipped:** 2026-06-09
+- **Runtime files:** 4 Node.js hook/CLI scripts (~460 LOC) + `bin/install.js` (180 LOC) + `/gsd-feature` SKILL.md (360 lines)
+- **Test coverage:** 12 automated tests (gsd-phase-pacer: 7, installer: 5) via Node.js built-in test runner
+- **Tech stack:** CommonJS Node.js, no runtime dependencies, Node ≥18
+- **Known installer bugs (pre-publish):** CR-01 (array hooks guard), CR-02 (malformed JSON silent overwrite), CR-03 (unquoted Windows paths) — see `.planning/phases/03-npx-installer-package-wiring/03-REVIEW.md`
+
 ## Constraints
 
 - **Compatibility:** Must work on top of any gsd-core version >= 1.28 without modifications to gsd-core files
@@ -53,6 +61,10 @@ None — all v1 requirements complete.
 | Economy settings injected per-invocation in `/gsd-feature` (not written to config) | Avoids permanently altering project config for a feature run | ✅ Implemented — Phase 2 |
 | Phase pacing as base delay inside economy system, not separate | Fewer moving parts; one hook handles both concerns | ✅ Confirmed — gsd-phase-pacer defers to economy.lock |
 | `require.main === module` guard in gsd-economy.js | Allows gsd-429-guard to require() and call activate() without killing its own process | ✅ Added during Phase 1 execution |
+| Pre-mutation deep-clone of `settings.hooks` before `installHooks()` call | JS pass-by-reference: `installHooks` mutates settings in-place; snapshot after the call would record the post-mutation state | ✅ Auto-fixed during Phase 3 execution |
+| `saveHooksSnapshot` accepts the pre-extracted hooks block, not the full settings object | Enforces the correct call sequence at the API level — callers can't accidentally snapshot post-mutation | ✅ Phase 3 design |
+| Hook idempotency scans `entry.hooks[].command` strings for filename substring | `settings.json` arrays may have multiple entries per event; substring scan of nested command is more reliable than top-level key presence | ✅ Phase 3 design |
+| Restore snapshot written only when `changed === true` | No-op installs leave no trace; avoids writing an unnecessary file on fully-idempotent runs | ✅ Phase 3 design |
 
 ## Evolution
 
@@ -72,4 +84,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-09 after Phase 3 complete — all v1 requirements validated*
+*Last updated: 2026-06-09 — v1.0 milestone complete*
