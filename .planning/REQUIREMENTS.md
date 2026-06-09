@@ -35,11 +35,11 @@
 
 ### NPX Installer
 
-- [ ] **INST-01**: `npx @<scope>/gsd-hooks@latest` detects existing gsd-core installation path (global or local)
-- [ ] **INST-02**: Installer wires hooks (gsd-phase-pacer, gsd-429-guard) into `~/.claude/settings.json` Stop and SubagentStop events
-- [ ] **INST-03**: Installer copies the `/gsd-feature` skill into `~/.claude/plugins/`
-- [ ] **INST-04**: Installer is idempotent — re-running does not duplicate hook registrations
-- [ ] **INST-05**: Installer prints a clear summary of what was installed and where
+- [x] **INST-01**: `npx @<scope>/gsd-hooks@latest` detects existing gsd-core installation path (global or local)
+- [x] **INST-02**: Installer wires hooks (gsd-phase-pacer, gsd-429-guard) into `~/.claude/settings.json` Stop and SubagentStop events
+- [x] **INST-03**: Installer copies the `/gsd-feature` skill into `~/.claude/plugins/`
+- [x] **INST-04**: Installer is idempotent — re-running does not duplicate hook registrations
+- [x] **INST-05**: Installer prints a clear summary of what was installed and where
 
 ## v2 Requirements
 
@@ -88,11 +88,11 @@
 | FEAT-04 | Phase 2 | Complete |
 | FEAT-05 | Phase 2 | Complete |
 | FEAT-06 | Phase 2 | Complete |
-| INST-01 | Phase 3 | Pending |
-| INST-02 | Phase 3 | Pending |
-| INST-03 | Phase 3 | Pending |
-| INST-04 | Phase 3 | Pending |
-| INST-05 | Phase 3 | Pending |
+| INST-01 | Phase 3 | Complete (03-01) |
+| INST-02 | Phase 3 | Complete (03-01) |
+| INST-03 | Phase 3 | Complete (03-01) |
+| INST-04 | Phase 3 | Complete (03-01) |
+| INST-05 | Phase 3 | Complete (03-01) |
 
 **Coverage:**
 
@@ -102,4 +102,4 @@
 
 ---
 *Requirements defined: 2026-06-08*
-*Last updated: 2026-06-08 after initial definition*
+*Last updated: 2026-06-09 after Phase 3 Plan 01 execution*

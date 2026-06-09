@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: 01-03-PLAN.md complete
-last_updated: "2026-06-09T05:33:43.088Z"
+stopped_at: 03-01-PLAN.md complete
+last_updated: "2026-06-09T05:38:30Z"
 progress:
   total_phases: 3
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
-  percent: 67
+  total_plans: 7
+  completed_plans: 5
+  percent: 71
 ---
 
 # State: gsd-hooks
@@ -18,21 +18,21 @@ progress:
 ## Project Reference
 
 **Core Value:** GSD keeps running without human intervention when it hits rate limits — self-recovering, not crashing.
-**Current Focus:** Phase 1 — Economy & Rate-Limit Layer
+**Current Focus:** Phase 03 — npx-installer-package-wiring
 
 ---
 
 ## Current Position
 
-Phase: 1 (Economy & Rate-Limit Layer) — EXECUTING
-Plan: 3 of 3
+Phase: 03 (npx-installer-package-wiring) — EXECUTING
+Plan: 1 of 2 — COMPLETE
 **Phase:** 3
-**Plan:** Not started
-**Status:** Ready to execute
-**Progress:** [ ] Phase 1  [ ] Phase 2  [ ] Phase 3
+**Plan:** 1 complete, 1 remaining
+**Status:** Executing Phase 03
+**Progress:** [x] Phase 1  [x] Phase 2  [ ] Phase 3
 
 ```
-Overall: 0 / 3 phases complete (2 plans complete)
+Overall: 2 / 3 phases complete (5 plans complete, 03-01 done)
 ```
 
 ---
@@ -41,9 +41,9 @@ Overall: 0 / 3 phases complete (2 plans complete)
 
 | Metric | Value |
 |--------|-------|
-| Phases complete | 0 / 3 |
-| Plans complete | 2 / 3 |
-| Requirements shipped | 6 / 21 |
+| Phases complete | 2 / 3 |
+| Plans complete | 5 / 7 |
+| Requirements shipped | 11 / 16 |
 | Node repairs used | 0 |
 
 ### Execution History
@@ -53,6 +53,7 @@ Overall: 0 / 3 phases complete (2 plans complete)
 | 01-economy-rate-limit-layer | 01 | 2min | 2 | 3 |
 | 01-economy-rate-limit-layer | 02 | 8min | 1 | 2 |
 | 01-economy-rate-limit-layer | 03 | 5min | 1 | 2 |
+| 03-npx-installer-package-wiring | 01 | 2min | 2 | 2 |
 
 ---
 
@@ -75,6 +76,9 @@ Overall: 0 / 3 phases complete (2 plans complete)
 | activate() returns (not process.exit) when already active | Required for safe require()-based invocation from 429 guard; guard must continue to log and sleep even if economy already on |
 | module.exports added to gsd-economy.js with require.main guard | Enables require('./gsd-economy') from hooks while preserving CLI behaviour |
 | Raw string scan for 429 detection | Transcript may be partially flushed at hook fire; raw includes() scan is safe and reliable vs JSON.parse |
+| originalHooks deep-cloned before installHooks mutation | JS pass-by-reference means settings object is mutated in-place; snapshot must be captured before mutation to be reversible |
+| Hook idempotency checks nested entry.hooks[].command strings | settings.json arrays may have multiple entries per event; substring scan of command is more reliable than key presence |
+| Restore snapshot written only when changed=true | No-op installs leave no trace; avoid unnecessary file writes |
 
 ### Important Constraints
 
@@ -88,6 +92,7 @@ Overall: 0 / 3 phases complete (2 plans complete)
 - [x] Complete Phase 1 Plan 01 — package scaffold and economy toggle CLI
 - [x] Execute Phase 1 Plan 02 — 429 guard hook
 - [x] Execute Phase 1 Plan 03 — phase pacer hook
+- [x] Execute Phase 3 Plan 01 — npx installer (bin/install.js + package.json bin entry)
 
 ### Blockers
 
@@ -97,11 +102,11 @@ None
 
 ## Session Continuity
 
-**Last session:** 2026-06-09 — Executed plan 01-03: phase pacer hook (TDD)
-**Stopped at:** 01-03-PLAN.md complete
-**Next action:** Phase 1 complete once 01-02 finishes
+**Last session:** 2026-06-09 — Executed plan 03-01: npx installer entry point
+**Stopped at:** 03-01-PLAN.md complete
+**Next action:** Execute Phase 3 Plan 02 (if exists) — phase 3 completion
 
 ---
 
 *State initialized: 2026-06-08*
-*Last updated: 2026-06-09 after plan 01-03 execution*
+*Last updated: 2026-06-09 after plan 03-01 execution*

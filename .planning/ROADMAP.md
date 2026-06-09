@@ -77,7 +77,7 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 03-01-PLAN.md — bin/install.js installer: hook wiring, skill copy, idempotency, summary output
+- [x] 03-01-PLAN.md — bin/install.js installer: hook wiring, skill copy, idempotency, summary output
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -91,9 +91,9 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Economy & Rate-Limit Layer | 3/3 | Complete    | 2026-06-09 |
 | 2. Feature Workflow Skill | 1/1 | Complete    | 2026-06-09 |
-| 3. NPX Installer & Package Wiring | 0/? | Not started | - |
+| 3. NPX Installer & Package Wiring | 1/2 | In progress | - |
 
 ---
 
 *Roadmap created: 2026-06-08*
-*Last updated: 2026-06-09 after Phase 2 planning*
+*Last updated: 2026-06-09 after Phase 3 Plan 01 execution*
