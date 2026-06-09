@@ -1,0 +1,12 @@
+{
+  "model_profile": "budget",
+  "parallelization": {
+    "max_concurrent_agents": 1
+  },
+  "workflow": {
+    "code_review": false,
+    "nyquist_validation": false,
+    "plan_check": false,
+    "verifier": false
+  }
+}

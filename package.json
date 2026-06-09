@@ -1,0 +1,22 @@
+{
+  "name": "gsd-hooks",
+  "version": "0.1.0",
+  "description": "Rate-limit resilience, economy mode, and feature workflow for GSD users",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "gsd-economy": "./hooks/gsd-economy.js"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "keywords": [
+    "gsd",
+    "claude",
+    "rate-limit",
+    "economy"
+  ],
+  "license": "MIT"
+}
