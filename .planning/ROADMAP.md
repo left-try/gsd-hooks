@@ -9,7 +9,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: Economy & Rate-Limit Layer** - Economy toggle, 429 recovery hook, and phase pacing — the self-healing core
+- [x] **Phase 1: Economy & Rate-Limit Layer** - Economy toggle, 429 recovery hook, and phase pacing — the self-healing core (completed 2026-06-09)
 - [ ] **Phase 2: Feature Workflow Skill** - /gsd-feature lightweight workflow running without a milestone setup
 - [ ] **Phase 3: NPX Installer & Package Wiring** - npx entry point that detects gsd-core and wires everything into place
 
@@ -78,7 +78,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Economy & Rate-Limit Layer | 3/3 | Complete | 2026-06-09 |
+| 1. Economy & Rate-Limit Layer | 3/3 | Complete    | 2026-06-09 |
 | 2. Feature Workflow Skill | 0/? | Not started | - |
 | 3. NPX Installer & Package Wiring | 0/? | Not started | - |
 

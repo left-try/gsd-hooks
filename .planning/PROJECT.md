@@ -12,13 +12,12 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Economy mode hook that patches `.planning/config.json` to budget model + 1 concurrent agent + disabled optional steps, with restore-on-toggle (Phase 1 — ECON-01, ECON-02, ECON-03, ECON-04)
+- [x] 429 detection hook (Stop/SubagentStop) that scans transcript for rate-limit signals, activates economy mode, and inserts cooldown before retrying (Phase 1 — RATE-01, RATE-02, RATE-03, RATE-04)
+- [x] Phase pacing hook (Stop) that adds a configurable base delay between phases to reduce burst pressure (Phase 1 — PACE-01, PACE-02)
 
 ### Active
 
-- [ ] Economy mode hook that patches `.planning/config.json` to budget model + 1 concurrent agent + disabled optional steps, with restore-on-toggle
-- [ ] 429 detection hook (Stop/SubagentStop) that scans transcript for rate-limit signals, activates economy mode, and inserts cooldown before retrying
-- [ ] Phase pacing hook (Stop) that adds a configurable base delay between phases to reduce burst pressure
 - [ ] `/gsd-feature` skill — lightweight feature workflow: discuss + plan as separate steps, execute+verify collapsed into one pass, no research/code-review/nyquist, no roadmap setup required
 - [ ] NPX installer that detects gsd-core install, wires hooks into `~/.claude/settings.json`, and copies skills into `~/.claude/plugins/`
 
@@ -48,10 +47,11 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Option B (economy mode + 429 detect) over Option A (pacing-only) or Option C (token tracker) | Self-healing at full quality normally; economy only when rate-limited. Option C requires token estimation without API access. | — Pending |
-| Node.js for all hooks (not shell scripts) | Cross-platform compatibility; gsd-core already uses Node hooks | — Pending |
-| Economy settings injected per-invocation in `/gsd-feature` (not written to config) | Avoids permanently altering project config for a feature run | — Pending |
-| Phase pacing as base delay inside economy system, not separate | Fewer moving parts; one hook handles both concerns | — Pending |
+| Option B (economy mode + 429 detect) over Option A (pacing-only) or Option C (token tracker) | Self-healing at full quality normally; economy only when rate-limited. Option C requires token estimation without API access. | ✅ Implemented — Phase 1 |
+| Node.js for all hooks (not shell scripts) | Cross-platform compatibility; gsd-core already uses Node hooks | ✅ Confirmed — all hooks are `.js`, no shell scripts |
+| Economy settings injected per-invocation in `/gsd-feature` (not written to config) | Avoids permanently altering project config for a feature run | — Pending (Phase 2) |
+| Phase pacing as base delay inside economy system, not separate | Fewer moving parts; one hook handles both concerns | ✅ Confirmed — gsd-phase-pacer defers to economy.lock |
+| `require.main === module` guard in gsd-economy.js | Allows gsd-429-guard to require() and call activate() without killing its own process | ✅ Added during Phase 1 execution |
 
 ## Evolution
 
@@ -71,4 +71,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-08 after initialization*
+*Last updated: 2026-06-09 after Phase 1 complete*
