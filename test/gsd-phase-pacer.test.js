@@ -50,6 +50,18 @@ function makeTmpDir(withLock = false) {
   return tmpDir;
 }
 
+/**
+ * Write .planning/config.json with a hooks section in tmpDir.
+ */
+function writeConfig(tmpDir, hooksObj) {
+  const planningDir = path.join(tmpDir, '.planning');
+  fs.mkdirSync(planningDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(planningDir, 'config.json'),
+    JSON.stringify({ hooks: hooksObj }, null, 2)
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Test 1: Syntax check — the file must exist and be valid JS
 // ---------------------------------------------------------------------------
@@ -169,11 +181,81 @@ test('defaults to 15s when GSD_PHASE_DELAY_SECS is non-numeric', () => {
 test('pacer does not create or modify any files when running', () => {
   const tmpDir = makeTmpDir(false);
   try {
-    // Note the set of files before running
+    writeConfig(tmpDir, { phase_delay_secs: 5 });
     const before = fs.readdirSync(path.join(tmpDir, '.planning')).sort();
     runPacer(tmpDir, { GSD_PHASE_DELAY_SECS: '0' });
     const after = fs.readdirSync(path.join(tmpDir, '.planning')).sort();
     assert.deepEqual(after, before, 'No files should be created or deleted in .planning/');
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// ADV-01: config hooks.phase_delay_secs overrides env
+// ---------------------------------------------------------------------------
+test('config phase_delay_secs=1 overrides GSD_PHASE_DELAY_SECS=30', () => {
+  const tmpDir = makeTmpDir(false);
+  try {
+    writeConfig(tmpDir, { phase_delay_secs: 1 });
+    const { status, stdout, durationMs } = runPacer(tmpDir, { GSD_PHASE_DELAY_SECS: '30' });
+    assert.equal(status, 0);
+    assert.ok(stdout.includes('[gsd-phase-pacer] Pacing delay: 1s'), `stdout: ${stdout}`);
+    assert.ok(durationMs >= 900, `expected ~1s delay, got ${durationMs}ms`);
+    assert.ok(durationMs < 2500, `expected ~1s delay, got ${durationMs}ms`);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test('config phase_delay_secs=0 disables pacing even when env is 30', () => {
+  const tmpDir = makeTmpDir(false);
+  try {
+    writeConfig(tmpDir, { phase_delay_secs: 0 });
+    const { status, stdout, durationMs } = runPacer(tmpDir, { GSD_PHASE_DELAY_SECS: '30' });
+    assert.equal(status, 0);
+    assert.equal(stdout.trim(), '');
+    assert.ok(durationMs < 500, `should exit immediately, took ${durationMs}ms`);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test('config phase_delay_secs=1 with economy.lock bypasses delay', () => {
+  const tmpDir = makeTmpDir(true);
+  try {
+    writeConfig(tmpDir, { phase_delay_secs: 1 });
+    const { status, stdout, durationMs } = runPacer(tmpDir, { GSD_PHASE_DELAY_SECS: '30' });
+    assert.equal(status, 0);
+    assert.ok(stdout.includes('Economy mode active — skipping pacing delay'));
+    assert.ok(durationMs < 500);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test('malformed config.json falls back to env GSD_PHASE_DELAY_SECS=1', () => {
+  const tmpDir = makeTmpDir(false);
+  try {
+    const planningDir = path.join(tmpDir, '.planning');
+    fs.writeFileSync(path.join(planningDir, 'config.json'), '{ not valid json');
+    const { status, stdout, durationMs } = runPacer(tmpDir, { GSD_PHASE_DELAY_SECS: '1' });
+    assert.equal(status, 0);
+    assert.ok(stdout.includes('Pacing delay: 1s'));
+    assert.ok(durationMs >= 900);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test('config hooks without phase_delay_secs key uses env', () => {
+  const tmpDir = makeTmpDir(false);
+  try {
+    writeConfig(tmpDir, { context_warnings: true });
+    const { status, stdout, durationMs } = runPacer(tmpDir, { GSD_PHASE_DELAY_SECS: '1' });
+    assert.equal(status, 0);
+    assert.ok(stdout.includes('Pacing delay: 1s'));
+    assert.ok(durationMs >= 900);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }

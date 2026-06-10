@@ -5,24 +5,91 @@ const fs = require('fs');
 const path = require('path');
 const { activate } = require('./gsd-economy');
 
-// Resolve paths relative to cwd (project root where hooks are invoked from)
-const transcriptPath = process.env.CLAUDE_TRANSCRIPT_PATH;
-const logPath = path.join(process.cwd(), '.planning', 'rate-limit-log.json');
-
-/**
- * 429 signal strings to scan for in transcript content (case-sensitive).
- * Covers the four known representations of an Anthropic rate-limit response.
- */
 const RATE_LIMIT_SIGNALS = ['429', 'rate_limit_error', 'Too Many Requests', 'rate limit'];
 
+const BACKOFF_SECS_LADDER = [60, 120, 240];
+
 /**
- * Reads the file at filePath as UTF-8 and returns true if any RATE_LIMIT_SIGNALS
- * string is found in the content.  Returns false if the file cannot be read
- * (ENOENT or any other error) — missing transcript is not an error condition.
- *
- * @param {string} filePath - Absolute or relative path to the transcript file.
- * @returns {boolean}
+ * @param {number} strikeCount - 1-based strike count within a session
+ * @returns {number} Cooldown seconds (60 → 120 → 240 capped)
  */
+function computeCooldownSecs(strikeCount) {
+  const n = Math.max(1, Math.floor(strikeCount));
+  if (n === 1) return BACKOFF_SECS_LADDER[0];
+  if (n === 2) return BACKOFF_SECS_LADDER[1];
+  return BACKOFF_SECS_LADDER[2];
+}
+
+/**
+ * Session identity from Claude Code transcript path (parent directory basename).
+ *
+ * @param {string} transcriptPath
+ * @returns {string}
+ */
+function resolveSessionKey(transcriptPath) {
+  if (!transcriptPath) return '';
+  return path.basename(path.dirname(transcriptPath));
+}
+
+/**
+ * @param {string} backoffPath
+ * @returns {{ sessionKey: string, strikeCount: number }}
+ */
+function readBackoffState(backoffPath) {
+  try {
+    const raw = fs.readFileSync(backoffPath, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      const sessionKey = typeof parsed.sessionKey === 'string' ? parsed.sessionKey : '';
+      const strikeCount =
+        typeof parsed.strikeCount === 'number' && Number.isFinite(parsed.strikeCount)
+          ? Math.max(0, Math.floor(parsed.strikeCount))
+          : 0;
+      return { sessionKey, strikeCount };
+    }
+  } catch (_err) {
+    // Missing or malformed — start fresh
+  }
+  return { sessionKey: '', strikeCount: 0 };
+}
+
+/**
+ * @param {string} backoffPath
+ * @param {{ sessionKey: string, strikeCount: number }} state
+ */
+function writeBackoffState(backoffPath, state) {
+  fs.mkdirSync(path.dirname(backoffPath), { recursive: true });
+  fs.writeFileSync(
+    backoffPath,
+    JSON.stringify(
+      {
+        sessionKey: state.sessionKey,
+        strikeCount: state.strikeCount,
+      },
+      null,
+      2
+    )
+  );
+}
+
+/**
+ * Increment strike count for sessionKey. Resets when sessionKey changes (new session).
+ *
+ * @param {string} backoffPath
+ * @param {string} sessionKey
+ * @returns {number} New strike count (1-based)
+ */
+function incrementStrike(backoffPath, sessionKey) {
+  const current = readBackoffState(backoffPath);
+  let strikeCount = 0;
+  if (current.sessionKey === sessionKey) {
+    strikeCount = current.strikeCount;
+  }
+  strikeCount += 1;
+  writeBackoffState(backoffPath, { sessionKey, strikeCount });
+  return strikeCount;
+}
+
 function detectRateLimit(filePath) {
   let content;
   try {
@@ -33,14 +100,6 @@ function detectRateLimit(filePath) {
   return RATE_LIMIT_SIGNALS.some((signal) => content.includes(signal));
 }
 
-/**
- * Reads the existing JSON array from logPath (or [] if absent/unreadable),
- * pushes entry onto the array, then writes back as pretty-printed JSON.
- * Creates the .planning/ directory if it does not exist.
- *
- * @param {string} logPath - Path to rate-limit-log.json.
- * @param {{ timestamp: string, event: string, source: string }} entry
- */
 function appendLog(logPath, entry) {
   let entries = [];
   try {
@@ -57,43 +116,65 @@ function appendLog(logPath, entry) {
   fs.writeFileSync(logPath, JSON.stringify(entries, null, 2));
 }
 
-/**
- * Returns a Promise that resolves after ms milliseconds.
- *
- * @param {number} ms
- * @returns {Promise<void>}
- */
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Main async IIFE — runs when the hook fires as a Stop/SubagentStop hook
-(async () => {
-  // Guard: no transcript path set — nothing to scan, exit silently
-  if (!transcriptPath) {
-    process.exit(0);
+function resolveCooldownMs(cooldownSecs) {
+  const testMs = parseInt(process.env.GSD_BACKOFF_TEST_MS, 10);
+  if (!isNaN(testMs) && testMs > 0) {
+    return testMs;
   }
+  return cooldownSecs * 1000;
+}
 
-  // Guard: no 429 signals in transcript — no action needed
-  if (!detectRateLimit(transcriptPath)) {
+module.exports = {
+  BACKOFF_SECS_LADDER,
+  computeCooldownSecs,
+  resolveSessionKey,
+  readBackoffState,
+  writeBackoffState,
+  incrementStrike,
+  detectRateLimit,
+  appendLog,
+  resolveCooldownMs,
+};
+
+if (require.main === module) {
+  (async () => {
+    const transcriptPath = process.env.CLAUDE_TRANSCRIPT_PATH;
+    const logPath = path.join(process.cwd(), '.planning', 'rate-limit-log.json');
+    // Session-scoped backoff state — separate from economy.lock (ADV-02)
+    const backoffPath = path.join(process.cwd(), '.planning', 'rate-limit-backoff.json');
+
+    if (!transcriptPath) {
+      process.exit(0);
+    }
+
+    if (!detectRateLimit(transcriptPath)) {
+      process.exit(0);
+    }
+
+    activate();
+
+    const sessionKey = resolveSessionKey(transcriptPath);
+    const strikeCount = incrementStrike(backoffPath, sessionKey);
+    const cooldownSecs = computeCooldownSecs(strikeCount);
+
+    appendLog(logPath, {
+      timestamp: new Date().toISOString(),
+      event: '429_detected',
+      source: transcriptPath,
+      strikeCount,
+      cooldownSecs,
+    });
+
+    const strikeLabel = strikeCount >= 3 ? '3+' : String(strikeCount);
+    console.log(
+      `[gsd-429-guard] Rate limit detected — economy mode activated, cooling down ${cooldownSecs}s (strike ${strikeLabel})`
+    );
+
+    await sleep(resolveCooldownMs(cooldownSecs));
     process.exit(0);
-  }
-
-  // 429 detected — begin recovery sequence (RATE-02, RATE-03, RATE-04)
-
-  // RATE-02: Activate economy mode (idempotent — safe even if already active)
-  activate();
-
-  // RATE-04: Append timestamped event to rate-limit log
-  appendLog(logPath, {
-    timestamp: new Date().toISOString(),
-    event: '429_detected',
-    source: transcriptPath,
-  });
-
-  // RATE-03: 60-second cooldown so Stop/SubagentStop chain waits before next phase
-  console.log('[gsd-429-guard] Rate limit detected — economy mode activated, cooling down 60s');
-  await sleep(60_000);
-
-  process.exit(0);
-})();
+  })();
+}
