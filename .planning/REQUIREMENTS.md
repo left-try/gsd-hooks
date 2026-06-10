@@ -59,6 +59,8 @@ Deferred beyond v1.1.
 | FEAT-07 | Phase 6 | Pending |
 | FEAT-08 | Phase 6 | Pending |
 | DOCS-01 | Phase 7 | Pending |
+| FEAT-07 (deploy) | Phase 8 | Pending |
+| FEAT-08 (deploy) | Phase 8 | Pending |
 
 **Coverage:**
 

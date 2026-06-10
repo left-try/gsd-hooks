@@ -33,7 +33,7 @@ Re-running the installer is idempotent — already-wired hooks show `ALREADY PRE
 | Gemini CLI | `~/.gemini/settings.json` | `BeforeAgent` → `gsd-gemini-before.js`; `AfterAgent` → `gsd-gemini-after.js` | `~/.gemini/settings-hooks-restore.json` |
 | Codex | `~/.codex/hooks.json` | `SubagentStop` → `gsd-codex-429-guard.js` (600s timeout) | `~/.codex/hooks-restore.json` |
 
-**Claude Code only:** the installer also copies `/gsd-feature` to `~/.claude/plugins/gsd-feature/SKILL.md`.
+**Claude Code only:** the installer copies `/gsd-feature` to `~/.claude/plugins/gsd-feature/` (`SKILL.md` plus `lib/feature-history.js` and `lib/feature-ship.js`). Re-runs refresh these files.
 
 ### Uninstall / restore
 
@@ -109,7 +109,7 @@ Lightweight discuss → plan → execute+verify workflow without `ROADMAP.md`.
 - History log: `.planning/features/HISTORY.md` (date, slug, status, description, PR link)
 - `--economy` is informational; `.planning/economy.lock` is the authoritative economy signal
 - `--ship` creates a GitHub PR **only after** execute+verify passes; skipped with an explicit reason on failure
-- Skill installs to Claude Code only; use Claude sessions for `/gsd-feature` while Gemini/Codex hooks handle rate-limit resilience
+- Skill installs to Claude Code only (`~/.claude/plugins/gsd-feature/` including `lib/`); use Claude sessions for `/gsd-feature` while Gemini/Codex hooks handle rate-limit resilience
 
 ## Development
 

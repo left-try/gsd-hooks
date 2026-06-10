@@ -156,6 +156,19 @@ test('INST-03: copies /gsd-feature SKILL.md to plugins/gsd-feature/SKILL.md', ()
   }
 });
 
+test('INST-06: copies feature libs to plugins/gsd-feature/lib/', () => {
+  const tmpDir = makeTmpHome({ hooks: {} });
+  try {
+    const { status } = runInstaller(tmpDir);
+    assert.equal(status, 0);
+    const libDir = path.join(tmpDir, '.claude', 'plugins', 'gsd-feature', 'lib');
+    assert.ok(fs.existsSync(path.join(libDir, 'feature-history.js')));
+    assert.ok(fs.existsSync(path.join(libDir, 'feature-ship.js')));
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
 // ---------------------------------------------------------------------------
 // Test 4 — INST-04: idempotency → second install produces no duplicates
 // ---------------------------------------------------------------------------
@@ -238,8 +251,8 @@ test('INST-05: summary contains Install summary + WIRED + COPIED on first run, A
     assert.equal(second.status, 0, `Second run exited with status ${second.status}`);
 
     assert.ok(
-      second.stdout.includes('ALREADY PRESENT'),
-      `Expected 'ALREADY PRESENT' in second-run stdout but got:\n${second.stdout}`
+      second.stdout.includes('ALREADY PRESENT') || second.stdout.includes('UPDATED'),
+      `Expected 'ALREADY PRESENT' or 'UPDATED' in second-run stdout but got:\n${second.stdout}`
     );
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });

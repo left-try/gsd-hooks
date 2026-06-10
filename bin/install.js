@@ -16,7 +16,11 @@ const codexRestorePath = path.join(codexDir, 'hooks-restore.json');
 const pluginsDir = path.join(os.homedir(), '.claude', 'plugins');
 const hooksDir = path.join(__dirname, '..', 'hooks');
 const skillSrc = path.join(__dirname, '..', '.claude', 'skills', 'gsd-feature', 'SKILL.md');
-const skillDest = path.join(pluginsDir, 'gsd-feature', 'SKILL.md');
+const skillDestDir = path.join(pluginsDir, 'gsd-feature');
+const skillDest = path.join(skillDestDir, 'SKILL.md');
+const skillLibSrcDir = path.join(__dirname, '..', 'lib');
+const skillLibDestDir = path.join(skillDestDir, 'lib');
+const FEATURE_LIB_FILES = ['feature-history.js', 'feature-ship.js'];
 
 function readJsonOrEmpty(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -194,20 +198,32 @@ function installCodex(actions) {
   }
 }
 
-function installSkill(actions) {
-  if (fs.existsSync(skillDest)) {
-    actions.push({
-      label: '/gsd-feature skill → ~/.claude/plugins/gsd-feature/SKILL.md',
-      status: 'ALREADY PRESENT',
-    });
-    return;
-  }
-  fs.mkdirSync(path.dirname(skillDest), { recursive: true });
-  fs.copyFileSync(skillSrc, skillDest);
+function syncSkillFile(src, dest, label, actions) {
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  const existed = fs.existsSync(dest);
+  fs.copyFileSync(src, dest);
   actions.push({
-    label: '/gsd-feature skill → ~/.claude/plugins/gsd-feature/SKILL.md',
-    status: 'COPIED',
+    label,
+    status: existed ? 'UPDATED' : 'COPIED',
   });
+}
+
+function installSkill(actions) {
+  fs.mkdirSync(skillDestDir, { recursive: true });
+  syncSkillFile(
+    skillSrc,
+    skillDest,
+    '/gsd-feature skill → ~/.claude/plugins/gsd-feature/SKILL.md',
+    actions
+  );
+  for (const libFile of FEATURE_LIB_FILES) {
+    syncSkillFile(
+      path.join(skillLibSrcDir, libFile),
+      path.join(skillLibDestDir, libFile),
+      `/gsd-feature lib → ~/.claude/plugins/gsd-feature/lib/${libFile}`,
+      actions
+    );
+  }
 }
 
 function printSummary(actions) {

@@ -52,7 +52,7 @@ Slug sanitization: strip chars not matching [a-z0-9-], lowercase, replace spaces
 Parse `$ARGUMENTS` with the package flag parser (or equivalent inline logic matching `lib/feature-ship.js`):
 
 ```bash
-node -e "const f=require('./lib/feature-ship'); console.log(JSON.stringify(f.parseFeatureFlags(process.argv[1])))" "$ARGUMENTS"
+node -e "const p=require('path'),o=require('os');const f=require(p.join(o.homedir(),'.claude','plugins','gsd-feature','lib','feature-ship'));console.log(JSON.stringify(f.parseFeatureFlags(process.argv[1])))" "$ARGUMENTS"
 ```
 
 Set `DESCRIPTION`, `SHIP_FLAG`, and `ECONOMY_FLAG` from the result (`ship` → `SHIP_FLAG`, `economy` → `ECONOMY_FLAG`). If `DESCRIPTION` is empty after parsing, output usage and stop:
@@ -307,7 +307,7 @@ Write a `SUMMARY.md` to `${FEATURE_DIR}/SUMMARY.md`:
 After `SUMMARY.md` is written, append a row to the project feature history log (FEAT-08):
 
 ```bash
-node -e "const h=require('./lib/feature-history'); h.appendHistoryEntry(process.cwd(), { slug: process.argv[1], status: process.argv[2], description: process.argv[3], pr: '—' });" "{SLUG}" "{complete|incomplete}" "{DESCRIPTION}"
+node -e "const p=require('path'),o=require('os');const h=require(p.join(o.homedir(),'.claude','plugins','gsd-feature','lib','feature-history'));h.appendHistoryEntry(process.cwd(),{slug:process.argv[1],status:process.argv[2],description:process.argv[3],pr:'—'});" "{SLUG}" "{complete|incomplete}" "{DESCRIPTION}"
 ```
 
 - `status` is `complete` when Overall verification is PASS; otherwise `incomplete`.
@@ -322,7 +322,7 @@ Skip this step entirely when `SHIP_FLAG` is false.
 
 When `SHIP_FLAG` is true, run after Step 4b:
 
-1. **Gate** — load `canShip` from `lib/feature-ship.js` with verification Overall result and `SUMMARY.md` status. If blocked, print `◆ Ship skipped: {reason}` and stop (no PR, no push).
+1. **Gate** — load `canShip` from `~/.claude/plugins/gsd-feature/lib/feature-ship.js` (via homedir path in a `node -e` one-liner, same pattern as Step 1 flag parse) with verification Overall result and `SUMMARY.md` status. If blocked, print `◆ Ship skipped: {reason}` and stop (no PR, no push).
 
 2. **Preflight**
    - `gh --version` and `gh auth status` — if missing, print setup help and skip
