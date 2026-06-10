@@ -73,7 +73,12 @@ Plans:
   4. Codex user hitting a 429 gets automatic economy activation and cooldown — same self-healing behavior as Claude Code
   5. Multi-runtime installs are idempotent and write restore snapshots before mutating runtime config (same safety guarantees as v1.0 installer)
 
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+
+- [ ] 05-01-PLAN.md — Shared runtime hook utilities + cwd-aware economy/runGuard refactor
+- [ ] 05-02-PLAN.md — Gemini CLI BeforeAgent/AfterAgent hooks + installer (MULTI-01)
+- [ ] 05-03-PLAN.md — Codex SubagentStop hook + installer (MULTI-02)
 
 ### Phase 6: Feature Workflow Enhancements
 
@@ -114,7 +119,7 @@ Plans:
 | 2. Feature Workflow Skill | v1.0 | 1/1 | Complete | 2026-06-09 |
 | 3. NPX Installer & Package Wiring | v1.0 | 2/2 | Complete | 2026-06-09 |
 | 4. Advanced Pacing | v1.1 | 0/2 | Not started | - |
-| 5. Multi-Runtime Support | v1.1 | 0/TBD | Not started | - |
+| 5. Multi-Runtime Support | v1.1 | 0/3 | Not started | - |
 | 6. Feature Workflow Enhancements | v1.1 | 0/TBD | Not started | - |
 | 7. Package Documentation | v1.1 | 0/TBD | Not started | - |
 
