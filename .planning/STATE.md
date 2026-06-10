@@ -80,4 +80,4 @@ Resume file: None
 
 ## Operator Next Steps
 
-- Start the next milestone with `/gsd-new-milestone`
+- `/gsd-discuss-phase 9` or `/gsd-plan-phase 9`
