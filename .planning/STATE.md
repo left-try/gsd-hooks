@@ -1,15 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: none
-milestone_name: none
-status: awaiting_next_milestone
-stopped_at: Milestone v1.1 complete — ready for /gsd-new-milestone
-last_updated: "2026-06-11T00:00:00.000Z"
-last_activity: 2026-06-11 — Milestone v1.1 completed and archived
+milestone: v1.2
+milestone_name: Hardening & Publish Polish
+status: planning
+last_updated: "2026-06-10T20:55:40.900Z"
+last_activity: 2026-06-11 — v1.2 roadmap approved (Phases 9-11)
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
-  total_plans: 0
+  total_plans: 3
   completed_plans: 0
   percent: 0
 ---
@@ -21,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-11)
 
 **Core value:** GSD keeps running without human intervention when it hits rate limits — self-recovering, not crashing.
-**Current focus:** Planning next milestone
+**Current focus:** Phase 9 — Gemini Test Hardening
 
 ## Current Position
 
-Phase: —
-Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-11 — Milestone v1.1 completed and archived
+Phase: 9 of 11 (Gemini Test Hardening)
+Plan: — of 1 in current phase
+Status: Ready to plan
+Last activity: 2026-06-11 — v1.2 roadmap approved (Phases 9-11)
 
 ## Performance Metrics
 

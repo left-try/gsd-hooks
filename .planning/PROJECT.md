@@ -27,7 +27,12 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 
 ### Active
 
-(None — start next milestone with `/gsd-new-milestone`)
+- [ ] `gsd-gemini-after` runtime integration test (TEST-01)
+- [ ] `readme.test.js` asserts `gsd-gemini-after` (DOCS-02)
+- [ ] Retroactive Phase 5 `05-VERIFICATION.md` (VERIFY-01)
+- [ ] npm publish metadata committed — `files`, `repository` (PUB-01)
+- [ ] Version `0.1.1` with README pin (PUB-02)
+- [ ] README GitHub install fallback (PUB-03)
 
 ### Out of Scope
 
@@ -45,11 +50,22 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 - **Supported runtimes:** Claude Code, Gemini CLI, Codex
 - **Known tech debt:** No `gsd-gemini-after` runtime integration test; Phase 5 lacks formal VERIFICATION.md
 
-## Current State (v1.1)
+## Current Milestone: v1.2 Hardening & Publish Polish
+
+**Goal:** Close v1.1 tech debt and ship a reliable `gsd-hooks@0.1.1` npm release.
+
+**Target features:**
+
+- `gsd-gemini-after` integration test (closes MULTI-01 partial)
+- Retroactive Phase 5 verification artifact
+- npm publish polish: metadata, 0.1.1 bump, GitHub install fallback
+
+## Current State (v1.1 shipped)
 
 - **Shipped:** 2026-06-10
-- **Milestones:** v1.0 (Phases 1-3), v1.1 (Phases 4-8)
-- **Next candidates:** Cursor IDE hooks (MULTI-03), rate-limit observability CLI (OBS-01)
+- **npm:** `gsd-hooks@0.1.0`
+- **Tests:** 56 passing
+- **Tech debt driving v1.2:** Gemini after test, Phase 5 VERIFICATION.md, uncommitted publish metadata
 
 ## Constraints
 
@@ -76,4 +92,4 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 This document evolves at phase transitions and milestone boundaries.
 
 ---
-*Last updated: 2026-06-11 after v1.1 milestone*
+*Last updated: 2026-06-11 — v1.2 milestone started*
