@@ -1,7 +1,7 @@
 ---
 name: gsd-feature
 description: "Develop and ship an isolated feature without a milestone or ROADMAP.md"
-argument-hint: "<feature description> [--economy]"
+argument-hint: "<feature description> [--ship] [--economy]"
 allowed-tools:
   - Read
   - Write
@@ -49,13 +49,18 @@ Slug sanitization: strip chars not matching [a-z0-9-], lowercase, replace spaces
 
 ## Step 1 — Bootstrap
 
-Parse `$ARGUMENTS`: strip leading/trailing whitespace. If `$ARGUMENTS` contains `--economy`, set `ECONOMY_FLAG=true` and remove the flag token from the description string; otherwise `ECONOMY_FLAG=false`.
+Parse `$ARGUMENTS` with the package flag parser (or equivalent inline logic matching `lib/feature-ship.js`):
 
-Derive `DESCRIPTION` from the remaining argument text. If `DESCRIPTION` is empty after stripping the flag, output usage and stop:
+```bash
+node -e "const f=require('./lib/feature-ship'); console.log(JSON.stringify(f.parseFeatureFlags(process.argv[1])))" "$ARGUMENTS"
+```
+
+Set `DESCRIPTION`, `SHIP_FLAG`, and `ECONOMY_FLAG` from the result (`ship` → `SHIP_FLAG`, `economy` → `ECONOMY_FLAG`). If `DESCRIPTION` is empty after parsing, output usage and stop:
 
 ```
-Usage: /gsd-feature "<feature description>"
+Usage: /gsd-feature "<feature description>" [--ship] [--economy]
 Example: /gsd-feature "add dark mode toggle to settings page"
+Example: /gsd-feature "fix login redirect" --ship
 ```
 
 Derive `SLUG` from `DESCRIPTION`:
@@ -94,6 +99,7 @@ Display startup banner:
 
  Slug:    {SLUG}
  Folder:  .planning/features/{SLUG}/
+ Ship:    {SHIP_FLAG==true ? "on (auto-PR after verify)" : "off"}
  Economy: {ECONOMY_ACTIVE==true ? "on (economy.lock present)" : "off (per-invocation budget settings apply)"}
 ```
 
@@ -296,6 +302,45 @@ Write a `SUMMARY.md` to `${FEATURE_DIR}/SUMMARY.md`:
 {any deviation from PLAN.md, or "None"}
 ```
 
+### Step 4b — Record history
+
+After `SUMMARY.md` is written, append a row to the project feature history log (FEAT-08):
+
+```bash
+node -e "const h=require('./lib/feature-history'); h.appendHistoryEntry(process.cwd(), { slug: process.argv[1], status: process.argv[2], description: process.argv[3], pr: '—' });" "{SLUG}" "{complete|incomplete}" "{DESCRIPTION}"
+```
+
+- `status` is `complete` when Overall verification is PASS; otherwise `incomplete`.
+- Print: `◆ History updated: .planning/features/HISTORY.md`
+- The PR column is updated by Step 5 when `--ship` succeeds.
+
+---
+
+## Step 5 — Ship (optional, `--ship` only)
+
+Skip this step entirely when `SHIP_FLAG` is false.
+
+When `SHIP_FLAG` is true, run after Step 4b:
+
+1. **Gate** — load `canShip` from `lib/feature-ship.js` with verification Overall result and `SUMMARY.md` status. If blocked, print `◆ Ship skipped: {reason}` and stop (no PR, no push).
+
+2. **Preflight**
+   - `gh --version` and `gh auth status` — if missing, print setup help and skip
+   - `git remote -v` — require `origin`
+   - If working tree dirty: stage and commit with message `feat({SLUG}): {description truncated to 72 chars}`
+
+3. **Branch** — if current branch equals base (`resolveBaseBranch` from `lib/feature-ship.js`), create `feature/{SLUG}`
+
+4. **Push** — `git push -u origin HEAD` (skip PR on failure)
+
+5. **PR** — write body via `buildFeaturePrBody({ slug, description, featureDir })` to a temp file; run `gh pr create --title "Feature: {description}" --body-file {tmp} --base {BASE}`
+
+6. **History** — on success, `updateHistoryPr(cwd, SLUG, prUrl)` and print PR URL
+
+Never pass raw `DESCRIPTION` unquoted to shell; use `--body-file` for `gh pr create`.
+
+---
+
 Display final banner:
 
 ```
@@ -305,6 +350,7 @@ Display final banner:
 
  Feature:   {DESCRIPTION}
  Artifacts: .planning/features/{SLUG}/
+ History:   .planning/features/HISTORY.md
  Status:    {complete | incomplete — see SUMMARY.md for gaps}
 ```
 
@@ -333,7 +379,7 @@ Options:
 - **"Skip"** — log and continue to next step
 - **"Stop"** — exit with current SUMMARY.md state
 
-**HARD CONSTRAINT throughout all steps:** Never write to ROADMAP.md, STATE.md, or any file under `.planning/phases/`. Feature artifacts are isolated to `.planning/features/{SLUG}/` only. If any step would produce output outside this boundary, stop and report the conflict.
+**HARD CONSTRAINT throughout all steps:** Never write to ROADMAP.md, STATE.md, or any file under `.planning/phases/`. Feature artifacts are isolated to `.planning/features/{SLUG}/` and `.planning/features/HISTORY.md` only. If any step would produce output outside this boundary, stop and report the conflict.
 
 </process>
 
