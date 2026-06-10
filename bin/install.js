@@ -5,19 +5,19 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-// Resolve all target paths up front
-const settingsPath = path.join(os.homedir(), '.claude', 'settings.json');
-const pluginsDir   = path.join(os.homedir(), '.claude', 'plugins');
-const hooksDir     = path.join(__dirname, '..', 'hooks');
-const skillSrc     = path.join(__dirname, '..', '.claude', 'skills', 'gsd-feature', 'SKILL.md');
-const skillDest    = path.join(pluginsDir, 'gsd-feature', 'SKILL.md');
-const restorePath  = path.join(os.homedir(), '.claude', 'settings-hooks-restore.json');
+const claudeSettingsPath = path.join(os.homedir(), '.claude', 'settings.json');
+const claudeRestorePath = path.join(os.homedir(), '.claude', 'settings-hooks-restore.json');
+const geminiSettingsPath = path.join(os.homedir(), '.gemini', 'settings.json');
+const geminiRestorePath = path.join(os.homedir(), '.gemini', 'settings-hooks-restore.json');
+const codexDir = path.join(os.homedir(), '.codex');
+const codexHooksPath = path.join(codexDir, 'hooks.json');
+const codexRestorePath = path.join(codexDir, 'hooks-restore.json');
 
-/**
- * Returns parsed JSON from filePath if it does not exist, returns {}.
- * If the file EXISTS but cannot be parsed, throws a descriptive error to
- * prevent silent overwrite of a corrupted settings.json (CR-02).
- */
+const pluginsDir = path.join(os.homedir(), '.claude', 'plugins');
+const hooksDir = path.join(__dirname, '..', 'hooks');
+const skillSrc = path.join(__dirname, '..', '.claude', 'skills', 'gsd-feature', 'SKILL.md');
+const skillDest = path.join(pluginsDir, 'gsd-feature', 'SKILL.md');
+
 function readJsonOrEmpty(filePath) {
   if (!fs.existsSync(filePath)) {
     return {};
@@ -28,91 +28,172 @@ function readJsonOrEmpty(filePath) {
   } catch (err) {
     throw new Error(
       `${filePath} exists but is not valid JSON — aborting to avoid data loss. ` +
-      `Fix the file manually first. Parse error: ${err.message}`
+        `Fix the file manually first. Parse error: ${err.message}`
     );
   }
 }
 
-/**
- * Saves the provided hooks block to settings-hooks-restore.json before any
- * modification is made (safety — T-03-01).  Caller must pass the original
- * (pre-mutation) hooks block, not the full settings object.
- *
- * @param {object} originalHooksBlock - The hooks block captured before mutation.
- */
-function saveHooksSnapshot(originalHooksBlock) {
-  fs.writeFileSync(restorePath, JSON.stringify(originalHooksBlock, null, 2));
-}
-
-/**
- * Wires Stop (gsd-phase-pacer) and SubagentStop (gsd-429-guard) hooks into
- * settings.hooks if they are not already registered.
- *
- * @param {object} settings - Parsed settings.json.
- * @param {Array}  actions  - Mutable array to push action records onto.
- * @returns {{ settings: object, changed: boolean }}
- */
-function installHooks(settings, actions) {
-  // Ensure hooks object exists — explicit Array.isArray guard required because
-  // typeof [] === 'object', so the simple typeof check would keep a [] value
-  // and silently discard all hook entries written to named array properties (CR-01).
+function ensureHooksObject(settings) {
   if (!settings.hooks || typeof settings.hooks !== 'object' || Array.isArray(settings.hooks)) {
     settings.hooks = {};
   }
-
-  let changed = false;
-
-  // --- Stop hook: gsd-phase-pacer ---
-  const pacerPath = path.join(hooksDir, 'gsd-phase-pacer.js');
-  if (!Array.isArray(settings.hooks['Stop'])) {
-    settings.hooks['Stop'] = [];
-  }
-  const pacerRegistered = settings.hooks['Stop'].some(
-    (entry) =>
-      entry.hooks &&
-      entry.hooks.some((h) => h.command && h.command.includes('gsd-phase-pacer'))
-  );
-  if (!pacerRegistered) {
-    settings.hooks['Stop'].push({
-      matcher: '',
-      hooks: [{ type: 'command', command: 'node ' + JSON.stringify(pacerPath) }],
-    });
-    changed = true;
-    actions.push({ label: 'Stop hook → gsd-phase-pacer.js', status: 'WIRED' });
-  } else {
-    actions.push({ label: 'Stop hook → gsd-phase-pacer.js', status: 'ALREADY PRESENT' });
-  }
-
-  // --- SubagentStop hook: gsd-429-guard ---
-  const guardPath = path.join(hooksDir, 'gsd-429-guard.js');
-  if (!Array.isArray(settings.hooks['SubagentStop'])) {
-    settings.hooks['SubagentStop'] = [];
-  }
-  const guardRegistered = settings.hooks['SubagentStop'].some(
-    (entry) =>
-      entry.hooks &&
-      entry.hooks.some((h) => h.command && h.command.includes('gsd-429-guard'))
-  );
-  if (!guardRegistered) {
-    settings.hooks['SubagentStop'].push({
-      matcher: '',
-      hooks: [{ type: 'command', command: 'node ' + JSON.stringify(guardPath) }],
-    });
-    changed = true;
-    actions.push({ label: 'SubagentStop hook → gsd-429-guard.js', status: 'WIRED' });
-  } else {
-    actions.push({ label: 'SubagentStop hook → gsd-429-guard.js', status: 'ALREADY PRESENT' });
-  }
-
-  return { settings, changed };
 }
 
-/**
- * Copies the /gsd-feature SKILL.md to ~/.claude/plugins/gsd-feature/SKILL.md
- * if it is not already present (idempotent — INST-04).
- *
- * @param {Array} actions - Mutable array to push action records onto.
- */
+function saveSnapshot(restorePath, hooksBlock) {
+  fs.mkdirSync(path.dirname(restorePath), { recursive: true });
+  fs.writeFileSync(restorePath, JSON.stringify(hooksBlock, null, 2));
+}
+
+function wireCommandHook(settings, eventName, hookFilename, substring, actions, label) {
+  ensureHooksObject(settings);
+  if (!Array.isArray(settings.hooks[eventName])) {
+    settings.hooks[eventName] = [];
+  }
+  const hookPath = path.join(hooksDir, hookFilename);
+  const registered = settings.hooks[eventName].some(
+    (entry) =>
+      entry.hooks && entry.hooks.some((h) => h.command && h.command.includes(substring))
+  );
+  if (!registered) {
+    settings.hooks[eventName].push({
+      matcher: '',
+      hooks: [{ type: 'command', command: 'node ' + JSON.stringify(hookPath) }],
+    });
+    actions.push({ label, status: 'WIRED' });
+    return true;
+  }
+  actions.push({ label, status: 'ALREADY PRESENT' });
+  return false;
+}
+
+function installClaude(actions) {
+  if (!fs.existsSync(claudeSettingsPath)) {
+    actions.push({
+      label: 'Claude Code settings',
+      status: 'WARNING: ~/.claude/settings.json not found — is gsd-core installed?',
+    });
+    return;
+  }
+
+  const settings = readJsonOrEmpty(claudeSettingsPath);
+  const originalHooks = JSON.parse(JSON.stringify(settings.hooks || {}));
+  let changed = false;
+
+  changed =
+    wireCommandHook(
+      settings,
+      'Stop',
+      'gsd-phase-pacer.js',
+      'gsd-phase-pacer',
+      actions,
+      'Stop hook → gsd-phase-pacer.js'
+    ) || changed;
+  changed =
+    wireCommandHook(
+      settings,
+      'SubagentStop',
+      'gsd-429-guard.js',
+      'gsd-429-guard',
+      actions,
+      'SubagentStop hook → gsd-429-guard.js'
+    ) || changed;
+
+  if (changed) {
+    saveSnapshot(claudeRestorePath, originalHooks);
+    fs.writeFileSync(claudeSettingsPath, JSON.stringify(settings, null, 2));
+  }
+}
+
+function installGemini(actions) {
+  if (!fs.existsSync(geminiSettingsPath)) {
+    actions.push({
+      label: 'Gemini CLI settings',
+      status: 'WARNING: ~/.gemini/settings.json not found — skipping Gemini hooks',
+    });
+    return;
+  }
+
+  const settings = readJsonOrEmpty(geminiSettingsPath);
+  const originalHooks = JSON.parse(JSON.stringify(settings.hooks || {}));
+  let changed = false;
+
+  changed =
+    wireCommandHook(
+      settings,
+      'BeforeAgent',
+      'gsd-gemini-before.js',
+      'gsd-gemini-before',
+      actions,
+      'BeforeAgent hook → gsd-gemini-before.js'
+    ) || changed;
+  changed =
+    wireCommandHook(
+      settings,
+      'AfterAgent',
+      'gsd-gemini-after.js',
+      'gsd-gemini-after',
+      actions,
+      'AfterAgent hook → gsd-gemini-after.js'
+    ) || changed;
+
+  if (changed) {
+    saveSnapshot(geminiRestorePath, originalHooks);
+    fs.writeFileSync(geminiSettingsPath, JSON.stringify(settings, null, 2));
+  }
+}
+
+function installCodex(actions) {
+  if (!fs.existsSync(codexDir)) {
+    actions.push({
+      label: 'Codex config',
+      status: 'WARNING: ~/.codex not found — skipping Codex hooks',
+    });
+    return;
+  }
+
+  let settings = readJsonOrEmpty(codexHooksPath);
+  if (!fs.existsSync(codexHooksPath)) {
+    settings = { hooks: {} };
+  }
+  const originalHooks = JSON.parse(JSON.stringify(settings.hooks || {}));
+  ensureHooksObject(settings);
+
+  const hookPath = path.join(hooksDir, 'gsd-codex-429-guard.js');
+  if (!Array.isArray(settings.hooks.SubagentStop)) {
+    settings.hooks.SubagentStop = [];
+  }
+
+  const registered = settings.hooks.SubagentStop.some(
+    (entry) =>
+      entry.hooks &&
+      entry.hooks.some((h) => h.command && h.command.includes('gsd-codex-429-guard'))
+  );
+
+  let changed = false;
+  if (!registered) {
+    settings.hooks.SubagentStop.push({
+      matcher: '',
+      hooks: [
+        {
+          type: 'command',
+          command: 'node ' + JSON.stringify(hookPath),
+          timeout: 600,
+        },
+      ],
+    });
+    changed = true;
+    actions.push({ label: 'SubagentStop hook → gsd-codex-429-guard.js', status: 'WIRED' });
+  } else {
+    actions.push({ label: 'SubagentStop hook → gsd-codex-429-guard.js', status: 'ALREADY PRESENT' });
+  }
+
+  if (changed) {
+    saveSnapshot(codexRestorePath, originalHooks);
+    fs.mkdirSync(codexDir, { recursive: true });
+    fs.writeFileSync(codexHooksPath, JSON.stringify(settings, null, 2));
+  }
+}
+
 function installSkill(actions) {
   if (fs.existsSync(skillDest)) {
     actions.push({
@@ -129,11 +210,6 @@ function installSkill(actions) {
   });
 }
 
-/**
- * Prints a human-readable install summary to stdout (INST-05).
- *
- * @param {Array<{ label: string, status: string }>} actions
- */
 function printSummary(actions) {
   console.log('[gsd-hooks] Install summary:');
   actions.forEach(({ label, status }) => {
@@ -141,41 +217,24 @@ function printSummary(actions) {
   });
 }
 
-// CLI entry point — only runs when invoked directly (not when require()'d)
+module.exports = {
+  readJsonOrEmpty,
+  installClaude,
+  installGemini,
+  installCodex,
+  installSkill,
+  printSummary,
+};
+
 if (require.main === module) {
   (async () => {
     try {
-      // Step 1: Check that ~/.claude/settings.json exists (gsd-core detection)
-      if (!fs.existsSync(settingsPath)) {
-        console.log(
-          '[gsd-hooks] WARNING: ~/.claude/settings.json not found — is gsd-core installed?'
-        );
-        process.exit(0);
-      }
-
-      // Step 2: Read current settings
-      const settings = readJsonOrEmpty(settingsPath);
-
-      // Capture original hooks block before any mutation (safety — T-03-01)
-      const originalHooks = JSON.parse(JSON.stringify(settings.hooks || {}));
-
-      // Step 3: Wire hooks (idempotent)
       const actions = [];
-      const { settings: updatedSettings, changed } = installHooks(settings, actions);
-
-      // Step 4: If any hooks were added, save snapshot first, then write updated settings
-      if (changed) {
-        saveHooksSnapshot(originalHooks);
-        fs.writeFileSync(settingsPath, JSON.stringify(updatedSettings, null, 2));
-      }
-
-      // Step 5: Copy skill (idempotent)
+      installClaude(actions);
+      installGemini(actions);
+      installCodex(actions);
       installSkill(actions);
-
-      // Step 6: Print summary
       printSummary(actions);
-
-      // Step 7: Exit cleanly
       process.exit(0);
     } catch (err) {
       console.error('[gsd-hooks] Fatal:', err.message);
