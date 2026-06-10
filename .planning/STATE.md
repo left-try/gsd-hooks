@@ -1,13 +1,13 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Multi-Runtime & Workflow Enhancements
-status: executing
-stopped_at: v1.1 roadmap approved — ready for Phase 4 planning
-last_updated: "2026-06-10T07:33:21.190Z"
-last_activity: 2026-06-10 — v1.1 roadmap approved (Phases 4-7)
+milestone: none
+milestone_name: none
+status: awaiting_next_milestone
+stopped_at: Milestone v1.1 complete — ready for /gsd-new-milestone
+last_updated: "2026-06-11T00:00:00.000Z"
+last_activity: 2026-06-11 — Milestone v1.1 completed and archived
 progress:
-  total_phases: 7
+  total_phases: 0
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -18,59 +18,46 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-10)
+See: .planning/PROJECT.md (updated 2026-06-11)
 
 **Core value:** GSD keeps running without human intervention when it hits rate limits — self-recovering, not crashing.
-**Current focus:** Phase 4 — Advanced Pacing
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-Phase: 4 of 7 (Advanced Pacing)
-Plan: — of TBD in current phase
-Status: Ready to execute
-Last activity: 2026-06-10 — v1.1 roadmap approved (Phases 4-7)
-
-Progress: [░░░░░░░░░░] 0%
+Phase: —
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-11 — Milestone v1.1 completed and archived
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 7
+- Total plans completed: 15 (v1.0: 6, v1.1: 9)
 - Average duration: ~4 min
-- Total execution time: ~0.4 hours
+- Total execution time: ~1 hour
 
-**By Phase:**
+**By Milestone:**
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 1. Economy & Rate-Limit Layer | 3 | 3 | ~5 min |
-| 2. Feature Workflow Skill | 1 | 1 | — |
-| 3. NPX Installer & Package Wiring | 2 | 2 | ~3 min |
-
-**Recent Trend:**
-
-- Last 5 plans: 2min, 8min, 5min, 2min, 4min
-- Trend: Stable
+| Milestone | Phases | Plans | Shipped |
+|-----------|--------|-------|---------|
+| v1.0 | 3 | 6 | 2026-06-09 |
+| v1.1 | 5 | 9 | 2026-06-10 |
 
 ## Accumulated Context
 
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- v1.0: Node.js for all hooks (not shell scripts) — cross-platform compatibility
-- v1.0: Phase pacing defers to economy.lock — 429 cooldown supersedes pacing delay
-- v1.0: Economy settings injected per-invocation in /gsd-feature — no permanent config changes
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-- Pre-publish installer bugs from Phase 3 review (CR-01, CR-02, CR-03) — may affect multi-runtime installer extensions in Phase 5
+None.
 
 ## Deferred Items
 
@@ -78,14 +65,20 @@ None yet.
 |----------|------|--------|-------------|
 | Runtime | Cursor IDE hook integration (MULTI-03) | Deferred | v1.1 planning |
 | Observability | Rate-limit event dashboard (OBS-01) | Deferred | v1.1 planning |
+| Testing | gsd-gemini-after runtime integration test | Tech debt | v1.1 close |
+| Verification | Phase 5 formal VERIFICATION.md | Tech debt | v1.1 close |
 
 ## Session Continuity
 
-Last session: 2026-06-10
-Stopped at: v1.1 roadmap approved — ready for Phase 4 planning
+Last session: 2026-06-11
+Stopped at: Milestone v1.1 complete — ready for /gsd-new-milestone
 Resume file: None
 
 ---
 
 *State initialized: 2026-06-08*
-*Last updated: 2026-06-10 — v1.1 roadmap created*
+*Last updated: 2026-06-11 — v1.1 milestone archived*
+
+## Operator Next Steps
+
+- Start the next milestone with `/gsd-new-milestone`

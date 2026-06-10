@@ -55,6 +55,52 @@
 
 ---
 
+## Milestone: v1.1 — Multi-Runtime & Workflow Enhancements
+
+**Shipped:** 2026-06-10
+**Phases:** 5 (4–8) | **Plans:** 9
+
+### What Was Built
+
+- **Advanced pacing** — `hooks.phase_delay_secs` per-project override; session-scoped 429 backoff ladder (60s → 120s → 240s)
+- **Multi-runtime adapters** — Gemini CLI BeforeAgent/AfterAgent hooks; Codex SubagentStop guard; shared `hooks/lib/runtime-hook.js`
+- **Feature workflow** — `--ship` auto-PR gate and feature history append libs with SKILL.md integration
+- **Package documentation** — README covering Claude/Gemini/Codex install, hooks, config, and `/gsd-feature`
+- **Deploy gap fix** — `installSkill` syncs feature libs to `~/.claude/plugins/gsd-feature/lib/` with consumer E2E tests
+- **npm publish** — `gsd-hooks@0.1.0` on registry
+
+### What Worked
+
+- **Gap-closure phase (Phase 8)** inserted after milestone audit caught a real deploy-time failure — audit → fix → verify loop worked
+- **Shared runtime-hook module** kept Gemini/Codex adapters thin without duplicating 429 scan logic
+- **Consumer E2E test** (`feature-plugin-deploy.test.js`) validated the skill lib path fix outside the repo
+
+### What Was Inefficient
+
+- **Missing SUMMARY.md files** for Phases 5–7 — code shipped but planning artifacts lagged, making `roadmap.analyze` report 33% progress at close
+- **Milestone audit ran before Phase 8** — required an extra closure phase that could have been caught during Phase 6 planning
+- **Planning doc churn** — "Service files" commit reorganized phase directories without updating ROADMAP checkboxes
+
+### Patterns Established
+
+- **Plugin-relative lib paths in SKILL.md** — feature libs resolve via `os.homedir()` plugin dir, not project cwd
+- **installSkill sync on every run** — COPIED/UPDATED status for skill + libs (not skip-if-exists)
+- **Runtime adapter pattern** — thin per-runtime entry scripts delegating to shared `runGuard`
+
+### Key Lessons
+
+1. **Deploy-time verification matters** — unit tests passing in-repo doesn't prove consumer installs work; E2E from a temp project cwd is essential for skill libs.
+2. **Keep SUMMARY.md in sync with commits** — milestone close tooling relies on summaries for accomplishments extraction.
+3. **Audit before close, but re-audit after gap fixes** — stale audit status (`gaps_found`) can mislead if closure phases land after the audit.
+
+### Cost Observations
+
+- Model mix: ~80% sonnet, ~20% opus
+- Sessions: 1 primary execution day (2026-06-10)
+- v1.1 shipped same day as roadmap approval — fast coarse-granularity execution
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -62,12 +108,14 @@
 | Milestone | Sessions | Phases | Key Change |
 |-----------|----------|--------|------------|
 | v1.0 | 2 | 3 | First milestone — baseline established |
+| v1.1 | 1 | 5 | Multi-runtime + audit-driven gap closure phase |
 
 ### Cumulative Quality
 
 | Milestone | Tests | Runtime LOC | Zero-Dep Additions |
 |-----------|-------|-------------|-------------------|
 | v1.0 | 12 | ~640 | 0 (no new dependencies) |
+| v1.1 | 56 | ~1200 | 0 (no new dependencies) |
 
 ### Top Lessons (Verified Across Milestones)
 
