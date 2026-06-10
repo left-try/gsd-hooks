@@ -20,14 +20,18 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 
 ### Active
 
-None — all v1 requirements complete.
+- [ ] Economy mode hooks ported to Gemini CLI (BeforeAgent/AfterAgent events) — MULTI-01
+- [ ] Economy mode hooks ported to Codex (SubagentStop event) — MULTI-02
+- [ ] Configurable per-project pacing via `.planning/config.json` extension (`hooks.phase_delay_secs`) — ADV-01
+- [ ] Exponential backoff on repeated 429s within the same session (60s → 120s → 240s) — ADV-02
+- [ ] `/gsd-feature --ship` auto-creates a PR after execute+verify completes — FEAT-07
+- [ ] Feature history log tracking all features run in a project — FEAT-08
 
 ### Out of Scope
 
 - Full replacement of gsd-core workflows — this package extends, never forks
 - Contributing changes upstream to open-gsd/gsd-core — everything lives in this package
 - Token counting or cost estimation — too brittle without direct API access; pacing by delay is simpler and reliable
-- Support for runtimes other than Claude Code in v1 — hooks are Claude Code hooks (`Stop`, `SubagentStop`, `PreCompact`)
 
 ## Context
 
@@ -36,6 +40,15 @@ None — all v1 requirements complete.
 - **gsd-core hot-reloads** `.planning/config.json` on `FileChanged` — so patching config in a hook takes effect without restarting the session.
 - **Hook system:** Claude Code fires `Stop` at session turn end and `SubagentStop` when a spawned subagent completes — these are the right events to intercept for pacing and recovery.
 - **Existing skills install path:** `~/.claude/plugins/` — the same path gsd-core uses for Claude Code skill installation.
+
+## Current Milestone: v1.1 Multi-Runtime & Workflow Enhancements
+
+**Goal:** Extend gsd-hooks beyond Claude Code with smarter pacing/recovery and richer `/gsd-feature` workflow — while keeping the self-healing rate-limit core intact.
+
+**Target features:**
+- Multi-runtime support — port economy/429/pacing hooks to Gemini CLI and Codex
+- Advanced pacing — per-project `hooks.phase_delay_secs` in config.json; exponential 429 backoff (60s → 120s → 240s)
+- Feature workflow — `/gsd-feature --ship` auto-creates PR after execute+verify; feature history log per project
 
 ### Current State (v1.0)
 
@@ -84,4 +97,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-09 — v1.0 milestone complete*
+*Last updated: 2026-06-10 — v1.1 milestone started*
