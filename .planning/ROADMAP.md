@@ -92,7 +92,11 @@ Plans:
   3. Each `/gsd-feature` run appends an entry to a project feature history log with slug, date, and completion status
   4. User can read the feature history log to see all past feature runs in the project without opening individual feature directories
 
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+
+- [ ] 06-01-PLAN.md — Feature history log at .planning/features/HISTORY.md (FEAT-08)
+- [ ] 06-02-PLAN.md — /gsd-feature --ship auto-PR after verify pass (FEAT-07)
 
 ### Phase 7: Package Documentation
 
@@ -107,7 +111,10 @@ Plans:
   4. README documents `/gsd-feature` usage including `--ship` and where feature artifacts/history are stored
   5. README includes configuration reference for `hooks.phase_delay_secs`, `GSD_PHASE_DELAY_SECS`, and economy toggle commands
 
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+
+- [ ] 07-01-PLAN.md — README.md with multi-runtime install, hooks, /gsd-feature, and config reference (DOCS-01)
 
 ---
 
@@ -120,8 +127,19 @@ Plans:
 | 3. NPX Installer & Package Wiring | v1.0 | 2/2 | Complete | 2026-06-09 |
 | 4. Advanced Pacing | v1.1 | 0/2 | Not started | - |
 | 5. Multi-Runtime Support | v1.1 | 0/3 | Not started | - |
-| 6. Feature Workflow Enhancements | v1.1 | 0/TBD | Not started | - |
-| 7. Package Documentation | v1.1 | 0/TBD | Not started | - |
+| 6. Feature Workflow Enhancements | v1.1 | 0/2 | Not started | - |
+| 7. Package Documentation | v1.1 | 0/1 | Not started | - |
+
+### Phase 8: Close gap: deploy feature libs with skill install
+
+**Goal:** [To be planned]
+**Requirements**: TBD
+**Depends on:** Phase 7
+**Plans:** 0 plans
+
+Plans:
+
+- [ ] TBD (run /gsd-plan-phase 8 to break down)
 
 ---
 
