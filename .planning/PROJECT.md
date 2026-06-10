@@ -26,6 +26,7 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 - [ ] Exponential backoff on repeated 429s within the same session (60s → 120s → 240s) — ADV-02
 - [ ] `/gsd-feature --ship` auto-creates a PR after execute+verify completes — FEAT-07
 - [ ] Feature history log tracking all features run in a project — FEAT-08
+- [ ] Project README.md with install and usage docs for all supported runtimes — DOCS-01
 
 ### Out of Scope
 
@@ -49,6 +50,7 @@ GSD keeps running without human intervention when it hits rate limits — self-r
 - Multi-runtime support — port economy/429/pacing hooks to Gemini CLI and Codex
 - Advanced pacing — per-project `hooks.phase_delay_secs` in config.json; exponential 429 backoff (60s → 120s → 240s)
 - Feature workflow — `/gsd-feature --ship` auto-creates PR after execute+verify; feature history log per project
+- Package documentation — README.md covering install, hooks, and usage across all supported runtimes
 
 ### Current State (v1.0)
 

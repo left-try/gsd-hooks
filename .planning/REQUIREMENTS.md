@@ -22,6 +22,10 @@ Requirements for milestone v1.1. Each maps to roadmap phases.
 - [ ] **FEAT-07**: `/gsd-feature --ship` auto-creates a PR after execute+verify completes
 - [ ] **FEAT-08**: Feature history log tracking all features run in a project
 
+### Package Documentation
+
+- [ ] **DOCS-01**: Project README.md with package overview, npx install instructions for Claude Code / Gemini CLI / Codex, hook behavior summary, `/gsd-feature` usage, and configuration reference (`hooks.phase_delay_secs`, env vars)
+
 ## Future Requirements
 
 Deferred beyond v1.1.
@@ -48,19 +52,20 @@ Deferred beyond v1.1.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MULTI-01 | — | Pending |
-| MULTI-02 | — | Pending |
-| ADV-01 | — | Pending |
-| ADV-02 | — | Pending |
-| FEAT-07 | — | Pending |
-| FEAT-08 | — | Pending |
+| ADV-01 | Phase 4 | Pending |
+| ADV-02 | Phase 4 | Pending |
+| MULTI-01 | Phase 5 | Pending |
+| MULTI-02 | Phase 5 | Pending |
+| FEAT-07 | Phase 6 | Pending |
+| FEAT-08 | Phase 6 | Pending |
+| DOCS-01 | Phase 7 | Pending |
 
 **Coverage:**
 
-- v1.1 requirements: 6 total
-- Mapped to phases: 0
-- Unmapped: 6 ⚠️
+- v1.1 requirements: 7 total
+- Mapped to phases: 7
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-10*
-*Last updated: 2026-06-10 — v1.1 milestone requirements defined*
+*Last updated: 2026-06-10 — v1.1 traceability mapped to Phases 4-6*

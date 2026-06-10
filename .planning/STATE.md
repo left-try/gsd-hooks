@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Multi-Runtime & Workflow Enhancements
 status: planning
-last_updated: "2026-06-10T07:04:26.789Z"
+last_updated: "2026-06-10"
 last_activity: 2026-06-10
 progress:
-  total_phases: 0
+  total_phases: 7
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,94 +17,72 @@ progress:
 
 ## Project Reference
 
-**Core Value:** GSD keeps running without human intervention when it hits rate limits — self-recovering, not crashing.
-**Current Focus:** Phase 03 — npx-installer-package-wiring
+See: .planning/PROJECT.md (updated 2026-06-10)
 
----
+**Core value:** GSD keeps running without human intervention when it hits rate limits — self-recovering, not crashing.
+**Current focus:** Phase 4 — Advanced Pacing
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-06-10 — Milestone v1.1 started
+Phase: 4 of 7 (Advanced Pacing)
+Plan: — of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-06-10 — v1.1 roadmap approved (Phases 4-7)
+
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
-| Metric | Value |
-|--------|-------|
-| Phases complete | 3 / 3 |
-| Plans complete | 7 / 7 |
-| Requirements shipped | 16 / 16 |
-| Node repairs used | 0 |
+**Velocity:**
+- Total plans completed: 7
+- Average duration: ~4 min
+- Total execution time: ~0.4 hours
 
-### Execution History
+**By Phase:**
 
-| Phase | Plan | Duration | Tasks | Files |
-|-------|------|----------|-------|-------|
-| 01-economy-rate-limit-layer | 01 | 2min | 2 | 3 |
-| 01-economy-rate-limit-layer | 02 | 8min | 1 | 2 |
-| 01-economy-rate-limit-layer | 03 | 5min | 1 | 2 |
-| 03-npx-installer-package-wiring | 01 | 2min | 2 | 2 |
-| 03-npx-installer-package-wiring | 02 | 4min | 1 | 1 |
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| 1. Economy & Rate-Limit Layer | 3 | 3 | ~5 min |
+| 2. Feature Workflow Skill | 1 | 1 | — |
+| 3. NPX Installer & Package Wiring | 2 | 2 | ~3 min |
 
----
+**Recent Trend:**
+- Last 5 plans: 2min, 8min, 5min, 2min, 4min
+- Trend: Stable
 
 ## Accumulated Context
 
-### Key Decisions
+### Decisions
 
-| Decision | Rationale |
-|----------|-----------|
-| Node.js for all hooks (not shell scripts) | Cross-platform compatibility; gsd-core already uses Node hooks |
-| Economy settings injected per-invocation in /gsd-feature | Avoids permanently altering project config for a feature run |
-| Phase pacing as part of economy system, not a standalone hook | Fewer moving parts; one hook handles both concerns |
-| Lock file for economy state detection | Readable by hooks without config parsing |
-| Restore snapshot written before config patch | Prevents config corruption if process dies mid-patch (T-01-01 mitigaton) |
-| extractSnapshot saves only diff keys, not full config | Avoids clobbering unrelated config changes made between --on and --off |
-| Lock file written last on activate | No stale lock if config write succeeds but lock write fails |
-| Missing restore snapshot on --off exits 1 with recovery instruction | Silent skip would corrupt config; user instructed to delete economy.lock manually |
-| setTimeout at top level for phase pacing delay | No async/await needed; process stays alive for delay duration without promise chain overhead |
-| Zero-delay exits silently (no output) | Avoids polluting CLI chain output when pacing is disabled |
-| activate() returns (not process.exit) when already active | Required for safe require()-based invocation from 429 guard; guard must continue to log and sleep even if economy already on |
-| module.exports added to gsd-economy.js with require.main guard | Enables require('./gsd-economy') from hooks while preserving CLI behaviour |
-| Raw string scan for 429 detection | Transcript may be partially flushed at hook fire; raw includes() scan is safe and reliable vs JSON.parse |
-| originalHooks deep-cloned before installHooks mutation | JS pass-by-reference means settings object is mutated in-place; snapshot must be captured before mutation to be reversible |
-| Hook idempotency checks nested entry.hooks[].command strings | settings.json arrays may have multiple entries per event; substring scan of command is more reliable than key presence |
-| Restore snapshot written only when changed=true | No-op installs leave no trace; avoid unnecessary file writes |
+Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
 
-### Important Constraints
+- v1.0: Node.js for all hooks (not shell scripts) — cross-platform compatibility
+- v1.0: Phase pacing defers to economy.lock — 429 cooldown supersedes pacing delay
+- v1.0: Economy settings injected per-invocation in /gsd-feature — no permanent config changes
 
-- Must work on top of any gsd-core version >= 1.28 without modifying gsd-core files
-- Config patching must save restore snapshot to `.planning/economy-restore.json` before overwriting
-- Hooks run in Node.js (not shell) for Windows/Git Bash compatibility
-- npx entry point only — no global npm install required
+### Pending Todos
 
-### Todos
+None yet.
 
-- [x] Complete Phase 1 Plan 01 — package scaffold and economy toggle CLI
-- [x] Execute Phase 1 Plan 02 — 429 guard hook
-- [x] Execute Phase 1 Plan 03 — phase pacer hook
-- [x] Execute Phase 3 Plan 01 — npx installer (bin/install.js + package.json bin entry)
-- [x] Execute Phase 3 Plan 02 — installer test suite (test/install.test.js, 5 tests, INST-01–05)
+### Blockers/Concerns
 
-### Blockers
+- Pre-publish installer bugs from Phase 3 review (CR-01, CR-02, CR-03) — may affect multi-runtime installer extensions in Phase 5
 
-None
+## Deferred Items
 
----
+| Category | Item | Status | Deferred At |
+|----------|------|--------|-------------|
+| Runtime | Cursor IDE hook integration (MULTI-03) | Deferred | v1.1 planning |
+| Observability | Rate-limit event dashboard (OBS-01) | Deferred | v1.1 planning |
 
 ## Session Continuity
 
-**Last session:** 2026-06-09 — Phase 3 code review complete (03-REVIEW.md committed)
-**Stopped at:** All 3 phases executed, reviewed, complete
-**Next action:** Run `/gsd-complete-milestone` to audit and wrap up v1.0
+Last session: 2026-06-10
+Stopped at: v1.1 roadmap approved — ready for Phase 4 planning
+Resume file: None
 
 ---
 
 *State initialized: 2026-06-08*
-*Last updated: 2026-06-09 after Phase 3 code review — all phases complete*
-
-## Operator Next Steps
-
-- Start the next milestone with /gsd-new-milestone
+*Last updated: 2026-06-10 — v1.1 roadmap created*
