@@ -126,7 +126,3 @@ npm test
 ```
 
 Runs all hook, installer, feature workflow, and README content tests with Node's built-in test runner.
-
-## License
-
-MIT
