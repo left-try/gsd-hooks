@@ -8,7 +8,7 @@
 
 - ✅ **v1.0 Rate-Limit Resilience & Economy** — Phases 1-3 (shipped 2026-06-09)
 - ✅ **v1.1 Multi-Runtime & Workflow Enhancements** — Phases 4-8 (shipped 2026-06-10)
-- 🚧 **v1.2 Hardening & Publish Polish** — Phases 9-11 (in progress)
+- ✅ **v1.2 Hardening & Publish Polish** — Phases 9-11 (shipped 2026-06-11)
 
 ---
 
@@ -38,15 +38,14 @@ See `.planning/milestones/v1.1-ROADMAP.md` for full phase details.
 
 </details>
 
-### 🚧 v1.2 Hardening & Publish Polish (In Progress)
+<details>
+<summary>✅ v1.2 Hardening & Publish Polish (Phases 9-11) — SHIPPED 2026-06-11</summary>
 
-**Milestone Goal:** Close v1.1 tech debt and ship a polished `0.1.1` npm release users can install reliably.
+- [x] **Phase 9: Gemini Test Hardening** (1/1 plan)
+- [x] **Phase 10: Phase 5 Verification** (1/1 plan)
+- [x] **Phase 11: npm 0.1.1 Publish Polish** (1/1 plan)
 
-**Total v1.2 Requirements:** 6
-
-- [ ] **Phase 9: Gemini Test Hardening** — `gsd-gemini-after` integration test + README doc guard
-- [ ] **Phase 10: Phase 5 Verification** — Retroactive `05-VERIFICATION.md` for multi-runtime support
-- [ ] **Phase 11: npm 0.1.1 Publish Polish** — Package metadata, version bump, GitHub install fallback
+</details>
 
 ---
 
@@ -113,11 +112,11 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1–8 | v1.0–v1.1 | 15/15 | Complete | 2026-06-10 |
-| 9. Gemini Test Hardening | v1.2 | 0/1 | Not started | - |
-| 10. Phase 5 Verification | v1.2 | 0/1 | Not started | - |
-| 11. npm 0.1.1 Publish Polish | v1.2 | 0/1 | Not started | - |
+| 9. Gemini Test Hardening | v1.2 | 1/1 | Complete | 2026-06-11 |
+| 10. Phase 5 Verification | v1.2 | 1/1 | Complete | 2026-06-11 |
+| 11. npm 0.1.1 Publish Polish | v1.2 | 1/1 | Complete | 2026-06-11 |
 
 ---
 
 *Roadmap created: 2026-06-08*
-*Last updated: 2026-06-11 — v1.2 milestone roadmap (Phases 9-11)*
+*Last updated: 2026-06-11 — v1.2 milestone shipped*

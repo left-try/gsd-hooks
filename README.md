@@ -21,7 +21,15 @@ The installer skips runtimes whose config is missing and prints a `WARNING` — 
 npx gsd-hooks
 ```
 
-Published form (when scoped on npm): `npx @<scope>/gsd-hooks@latest`
+Pin a version: `npx gsd-hooks@0.1.1`
+
+**From GitHub** (if npm is unavailable):
+
+```bash
+npx github:left-try/gsd-hooks
+```
+
+**From a local clone:** `npx .` in the repo root.
 
 Re-running the installer is idempotent — already-wired hooks show `ALREADY PRESENT` in the summary.
 

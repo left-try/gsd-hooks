@@ -10,6 +10,7 @@ const README = path.resolve(__dirname, '..', 'README.md');
 
 const REQUIRED = [
   'npx gsd-hooks',
+  'npx github:left-try/gsd-hooks',
   'Claude Code',
   'Gemini CLI',
   'Codex',

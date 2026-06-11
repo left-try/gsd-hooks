@@ -1,8 +1,20 @@
 {
   "name": "gsd-hooks",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Rate-limit resilience, economy mode, and feature workflow for GSD users",
   "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/left-try/gsd-hooks.git"
+  },
+  "files": [
+    "bin/",
+    "hooks/",
+    "lib/",
+    "presets/",
+    ".claude/skills/gsd-feature/",
+    "README.md"
+  ],
   "engines": {
     "node": ">=18"
   },

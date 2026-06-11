@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Hardening & Publish Polish
-status: planning
+status: milestone_complete
 last_updated: "2026-06-10T20:55:40.900Z"
 last_activity: 2026-06-11 — v1.2 roadmap approved (Phases 9-11)
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 3
   total_plans: 3
-  completed_plans: 0
-  percent: 0
+  completed_plans: 3
+  percent: 100
 ---
 
 # State: gsd-hooks
@@ -20,14 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-11)
 
 **Core value:** GSD keeps running without human intervention when it hits rate limits — self-recovering, not crashing.
-**Current focus:** Phase 9 — Gemini Test Hardening
+**Current focus:** Milestone v1.2 complete
 
 ## Current Position
 
-Phase: 9 of 11 (Gemini Test Hardening)
-Plan: 1 of 1 planned
-Status: Ready to execute
-Last activity: 2026-06-11 — Phase 9 planned (09-01)
+Phase: Milestone v1.2 complete
+Plan: —
+Status: All phases shipped
+Last activity: 2026-06-11 — Phases 9-11 executed (plan-execute-all)
 
 ## Performance Metrics
 
@@ -80,4 +80,4 @@ Resume file: None
 
 ## Operator Next Steps
 
-- `/gsd-discuss-phase 9` or `/gsd-plan-phase 9`
+- `/gsd-complete-milestone v1.2`
