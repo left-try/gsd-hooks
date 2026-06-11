@@ -16,6 +16,7 @@ const REQUIRED = [
   'gsd-phase-pacer',
   'gsd-429-guard',
   'gsd-gemini-before',
+  'gsd-gemini-after',
   'gsd-codex-429-guard',
   'hooks.phase_delay_secs',
   'GSD_PHASE_DELAY_SECS',
